@@ -143,15 +143,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GameFunc.h" />
+    <ClInclude Include="Iron.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Truck.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Fuel.cpp" />
     <ClCompile Include="Fuel.h" />
     <ClCompile Include="GameFunc.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Iron.cpp" />
+    <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Truck.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

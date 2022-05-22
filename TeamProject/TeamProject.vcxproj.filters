@@ -24,6 +24,12 @@
     <ClInclude Include="GameFunc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Iron.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Truck.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp">
@@ -32,7 +38,7 @@
     <ClCompile Include="Platform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="mainGame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="GameFunc.cpp">
@@ -40,6 +46,15 @@
     </ClCompile>
     <ClCompile Include="Fuel.h">
       <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Fuel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Iron.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Truck.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
