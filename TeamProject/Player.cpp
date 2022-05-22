@@ -5,6 +5,8 @@ Player::Player()
 	//플레이어 텍스처, 렉트, SFX등 초기화
 	//머리 위에 띄울 아이템?
 	//각종 변수들 초기화
+	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
+	gravityAcc_ = 9.8;
 }
 
 Player::~Player()
@@ -20,7 +22,7 @@ bool Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width)
 		dest_rect_player_.x + dest_rect_player_.w * 0.5 < pf_posX + pf_width &&
 		dest_rect_player_.y + dest_rect_player_.h == pf_posY)
 	{
-		if (horizontalSpeed_ <= 0)
+		if (horizontalSpeed_ >= 0)
 		{
 			isJump_ = false;
 			return true;
@@ -106,15 +108,16 @@ void Player::move_left(double timestep_s)
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
+	dest_rect_player_.x -= dt * horizontalSpeed_;
 	if (isJump_)
 	{
-		//ball launch의 내용 중 x축에 대한 내용만을 이곳에 구현
+		dest_rect_player_.y += dt * verticalSpeed_;
+		verticalSpeed_ += dt * gravityAcc_;
 	}
 	else
 	{
-		dest_rect_player_.x -= horizontalSpeed_;
+		verticalSpeed_ = 0;
 	}
-
 	
 }
 
@@ -123,13 +126,17 @@ void Player::move_right(double timestep_s)
 	//마찬가지
 	//매개변수로 키이벤트를 받아 좌우를 하나로 묶을 수 있을 것으로 보임
 	//오른쪽 바라보는 스프라이트
+	double dt = timestep_s;
+
+	dest_rect_player_.x += dt * horizontalSpeed_;
 	if (isJump_)
 	{
-
+		dest_rect_player_.y += dt * verticalSpeed_;
+		verticalSpeed_ += dt * gravityAcc_;
 	}
 	else
 	{
-		dest_rect_player_.x += horizontalSpeed_;
+		verticalSpeed_ = 0;
 	}
 }
 
@@ -142,7 +149,9 @@ void Player::jump(double timestep_s)
 {
 	if (isJump_ == false)
 	{
+		double dt = timestep_s;
 		isJump_ = true;
 		//ball launch의 내용 중 y축에 대한 내용만을 이곳에 구현
+		verticalSpeed_ -= (8 * dest_rect_player_.h) / mass_;
 	}
 }
