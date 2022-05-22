@@ -34,4 +34,21 @@ public:
 	virtual void Render() = 0;
 };
 
+class ItemInterface
+{
+private:
+	//아이템 그리기에 필요한 기본 요소
+	SDL_Texture* texture_item_;
+	SDL_Rect source_rect_item_;
+	SDL_Rect dest_rect_item_;
+public:
+	ItemInterface() = default;
+	virtual ~ItemInterface() = default;
+
+	virtual double width() { return dest_rect_item_.w; }
+	virtual double height() { return dest_rect_item_.h; }
+	virtual double posX() { return dest_rect_item_.x; }
+	virtual double posY() { return dest_rect_item_.y; }
+};
+
 extern PhaseInterface* game_phases[3];
