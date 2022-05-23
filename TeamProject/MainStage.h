@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GameFunc.h"
+#include "Player.h"
+#include "Platform.h"
 #include "Truck.h"
 #include "Fuel.h"
 #include "Iron.h"

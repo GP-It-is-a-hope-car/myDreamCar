@@ -10,9 +10,11 @@ public:
 	~Platform();
 
 	double width() { return dest_rect_pf_.w; }
-	double height() { return dest_rect_pf_.h;  }
+	double height() { return dest_rect_pf_.h; }
 	double posX() { return dest_rect_pf_.x; }
 	double posY() { return dest_rect_pf_.y; }
+
+	virtual void draw_pf();
 	
 private:
 	//플랫폼 그리기에 필요한 기본 요소

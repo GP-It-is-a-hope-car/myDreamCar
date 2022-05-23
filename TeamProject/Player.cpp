@@ -3,34 +3,53 @@
 Player::Player()
 {
 	//플레이어 텍스처, 렉트, SFX등 초기화
+	SDL_Surface* player_surface = IMG_Load("../../Resources/dummy.png");
+	texture_player_ = SDL_CreateTextureFromSurface(g_renderer, player_surface);
+	SDL_FreeSurface(player_surface);
+
+	SDL_QueryTexture(texture_player_, NULL, NULL, &source_rect_player_.w, &source_rect_player_.h);
+	source_rect_player_.x = source_rect_player_.y = 0;
+	dest_rect_player_.x = dest_rect_player_.y = 286;
+	dest_rect_player_.w = source_rect_player_.w;
+	dest_rect_player_.h = source_rect_player_.h;
+
 	//머리 위에 띄울 아이템?
+	
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
-	gravityAcc_ = 9.8;
+	verticalSpeed_ = 0;
+	horizontalSpeed_ = 0;
+	mass_ = 2;
+	gravityAcc_ = 980;
+	isHoldItem_ = false;
+	isJump_ = false;
 }
 
 Player::~Player()
 {
 	//사용한 자원들 반환
+	SDL_DestroyTexture(texture_player_);
+
 }
 
-bool Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width)
+void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, double pf_height)
 {
 	//플레이어의 좌표와 발판의 좌표 사이에서 검사
 	//발판 위에서의 충돌이 확인되면 중력이 적용 X
-	if (dest_rect_player_.x + dest_rect_player_.w * 0.5 > pf_posX &&
-		dest_rect_player_.x + dest_rect_player_.w * 0.5 < pf_posX + pf_width &&
-		dest_rect_player_.y + dest_rect_player_.h == pf_posY)
+	if (dest_rect_player_.x + dest_rect_player_.w * 0.95 > pf_posX &&
+		dest_rect_player_.x + dest_rect_player_.w * 0.05 < pf_posX + pf_width)
 	{
-		if (horizontalSpeed_ >= 0)
+		if (dest_rect_player_.y + dest_rect_player_.h == pf_posY ||
+			dest_rect_player_.y + dest_rect_player_.h > pf_posY + pf_height)
 		{
-			isJump_ = false;
-			return true;
+			if (verticalSpeed_ > 0)
+			{
+				isJump_ = false;
+				dest_rect_player_.y = pf_posY - dest_rect_player_.h;
+				verticalSpeed_ = 0;
+			}
 		}
-		
 	}
-	return false;
-
 }
 
 bool Player::testOnItem(double it_posX, double it_posY, double it_width, double it_height)
@@ -108,17 +127,9 @@ void Player::move_left(double timestep_s)
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	dest_rect_player_.x -= dt * horizontalSpeed_;
-	if (isJump_)
-	{
-		dest_rect_player_.y += dt * verticalSpeed_;
-		verticalSpeed_ += dt * gravityAcc_;
-	}
-	else
-	{
-		verticalSpeed_ = 0;
-	}
-	
+	horizontalSpeed_ = 32;
+	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
+	std::cout << dest_rect_player_.x << std::endl;
 }
 
 void Player::move_right(double timestep_s)
@@ -128,16 +139,17 @@ void Player::move_right(double timestep_s)
 	//오른쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	dest_rect_player_.x += dt * horizontalSpeed_;
-	if (isJump_)
-	{
-		dest_rect_player_.y += dt * verticalSpeed_;
-		verticalSpeed_ += dt * gravityAcc_;
-	}
-	else
-	{
-		verticalSpeed_ = 0;
-	}
+	horizontalSpeed_ = 32;
+	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
+	std::cout << dest_rect_player_.x << std::endl;
+}
+
+void Player::move_jump(double timestep_s)
+{
+	double dt = timestep_s;
+	
+	dest_rect_player_.y = dest_rect_player_.y + dt * verticalSpeed_;	
+	verticalSpeed_ = verticalSpeed_ + dt * gravityAcc_;
 }
 
 void Player::stop()
@@ -145,13 +157,17 @@ void Player::stop()
 	horizontalSpeed_ = 0;
 }
 
-void Player::jump(double timestep_s)
+void Player::jump()
 {
 	if (isJump_ == false)
 	{
-		double dt = timestep_s;
 		isJump_ = true;
 		//ball launch의 내용 중 y축에 대한 내용만을 이곳에 구현
-		verticalSpeed_ -= (8 * dest_rect_player_.h) / mass_;
+		verticalSpeed_ = verticalSpeed_ - (12 * dest_rect_player_.h) / mass_;
 	}
+}
+
+void Player::draw_player()
+{
+	SDL_RenderCopy(g_renderer, texture_player_, &source_rect_player_, &dest_rect_player_);
 }

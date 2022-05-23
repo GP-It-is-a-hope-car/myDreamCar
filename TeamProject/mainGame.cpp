@@ -8,6 +8,8 @@ int g_current_game_phase;
 
 PhaseInterface* game_phases[3];
 
+float g_timestep_s = 1.0f / 60.0f;
+
 int main(int argc, char* argv[]) {
 
 	// Initializing SDL library
@@ -38,7 +40,7 @@ int main(int argc, char* argv[]) {
 
 		Uint32 cur_time_ms = SDL_GetTicks();
 
-		if (cur_time_ms - g_last_time_ms < 33)
+		if (cur_time_ms - g_last_time_ms < (1000 * g_timestep_s))
 			continue;
 
 		game_phases[g_current_game_phase]->HandleEvents();

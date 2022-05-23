@@ -8,13 +8,21 @@
 #define CELL 50
 using namespace std;
 
+Player * p;
+Platform * pf1;
+Platform * pf2;
+
 enum Key
 {
-	LEFT,
+	LEFT = 1,
 	RIGHT,
 	UP,
 	DOWN
 };
+
+bool Left;
+bool Right;
+bool Jump;
 
 // Init() 대신 생성자를 사용함
 MainStage::MainStage()
@@ -49,8 +57,14 @@ MainStage::MainStage()
 	g_iron_source_rect.h = 421;
 
 
+
+
 	//게임 오브젝트들의 초기화
 	InitGameObjectState();
+
+	p = new Player;
+	pf1 = new Platform;
+	pf2 = new Platform(150, 300);
 
 	// Clear the console screen.
 	// 표준출력 화면을 깨끗히 지운다.
@@ -60,6 +74,10 @@ MainStage::MainStage()
 	game_time = 360; //360초
 	time_ms=0; 
 	time_sec=0;
+
+	Left = false;
+	Right = false;
+	Jump = false;
 }
 
 /////////////////////////////////////////////////////////////
@@ -69,7 +87,20 @@ MainStage::MainStage()
 // 게임에서 일어나는 변화는 모두 이 곳에서 구현한다.
 // main 함수의 while loop에 의해서 무한히 반복 호출된다는 것을 주의.
 void MainStage::Update() {
+	if (Left)
+	{
+		p->move_left(g_timestep_s);
+	}
 
+	if (Right)
+	{
+		p->move_right(g_timestep_s);
+	}
+
+	p->move_jump(g_timestep_s);
+	p->testOnPlatform(pf1->posX(), pf1->posY(), pf1->width(), pf1->height());
+	p->testOnPlatform(pf2->posX(), pf2->posY(), pf2->width(), pf2->height());
+	
 	g_elapsed_time_ms += 33;
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
@@ -96,6 +127,13 @@ void MainStage::Render() {
 
 	//고철을 그림	
 	SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
+
+	//플랫폼
+	pf1->draw_pf();
+	pf2->draw_pf();
+
+	//플레이어
+	p->draw_player();
 	
 	//제한 시간을 그림
 	{
@@ -129,19 +167,20 @@ void MainStage::HandleEvents()
 			break;
 
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_LEFT && g_cur_key != Key::RIGHT) {
-				g_cur_key = Key::LEFT;
+			if (event.key.keysym.sym == SDLK_LEFT) {
+				Left = true;
 			}
-			if (event.key.keysym.sym == SDLK_RIGHT && g_cur_key != Key::LEFT) {
-				g_cur_key = Key::RIGHT;
+			if (event.key.keysym.sym == SDLK_RIGHT) {
+				Right = true;
 			}
-			if (event.key.keysym.sym == SDLK_UP && g_cur_key != Key::DOWN) {
+			if (event.key.keysym.sym == SDLK_UP) {
 				g_cur_key = Key::UP;
 			}
-			if (event.key.keysym.sym == SDLK_DOWN && g_cur_key != Key::UP) {
+			if (event.key.keysym.sym == SDLK_DOWN) {
 				g_cur_key = Key::DOWN;
 			}
 			if (event.key.keysym.sym == SDLK_SPACE) {
+				p->jump();
 				//g_current_game_phase = PHASE_ENDING;
 			}
 			break;
@@ -161,6 +200,17 @@ void MainStage::HandleEvents()
 			}
 			break;
 
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_LEFT)
+			{
+				Left = false;
+			}
+			if (event.key.keysym.sym == SDLK_RIGHT)
+			{
+				Right = false;
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -189,6 +239,10 @@ MainStage::~MainStage()
 
 
 	TTF_CloseFont(g_font_gameover); // 폰트 메모리 해제
+
+	delete p;
+	delete pf1;
+	delete pf2;
 
 	//Mix_FreeChunk(g_missile_fire_sound);
 }

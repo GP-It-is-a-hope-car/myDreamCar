@@ -11,7 +11,7 @@ public:
 	Fuel(SDL_Rect dst_fuel) : amount(0), ItemInterface(dst_fuel, FUEL) {
 
 	};
-	virtual ~Fuel();
+	~Fuel() {};
 
 	virtual int getAmount() { return amount; }
 };

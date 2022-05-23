@@ -25,6 +25,7 @@ extern int g_current_game_phase;
 extern bool g_flag_running;
 extern SDL_Window* g_window;
 extern SDL_Renderer* g_renderer;
+extern float g_timestep_s;
 
 class PhaseInterface
 {
