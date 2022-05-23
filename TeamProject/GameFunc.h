@@ -18,6 +18,9 @@ const int PHASE_INTRO = 0;
 const int PHASE_MAINSTAGE = 1;
 const int PHASE_ENDING = 2;
 
+const int FUEL = 0;
+const int IRON = 1;
+
 extern int g_current_game_phase;
 extern bool g_flag_running;
 extern SDL_Window* g_window;
@@ -41,11 +44,15 @@ private:
 	/*SDL_Texture* texture_item_;
 	SDL_Rect source_rect_item_;*/
 	SDL_Rect dest_rect_item_;
+	int item_type;
 public:
-	ItemInterface(SDL_Rect dst_item) : dest_rect_item_(dst_item) {};
+	ItemInterface(SDL_Rect dst_item, int it) : dest_rect_item_(dst_item), item_type(it) {};
 	virtual ~ItemInterface() = default;
 
 	virtual SDL_Rect* getRect() { return &dest_rect_item_; }
+	virtual int getItemType() { return item_type; }
+	
+	
 };
 
 extern PhaseInterface* game_phases[3];

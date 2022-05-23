@@ -22,7 +22,6 @@ MainStage::MainStage()
 	MakeGameObjTextures();
 
 	InitTexts();
-	InitGameObjectState();
 
 	g_bg_1_source_rect.x = 0;
 	g_bg_1_source_rect.y = 0;
@@ -55,7 +54,7 @@ MainStage::MainStage()
 
 	// Clear the console screen.
 	// «•¡ÿ√‚∑¬ »≠∏È¿ª ±˙≤˝»˜ ¡ˆøÓ¥Ÿ.
-	system("cls");
+	//system("cls");
 }
 
 /////////////////////////////////////////////////////////////
@@ -87,7 +86,7 @@ void MainStage::Render() {
 	//ø¨∑·∏¶ ±◊∏≤
 	SDL_RenderCopy(g_renderer, g_fuel_sheet_texture, &g_fuel_source_rect, g_fuel->getRect());
 
-	//∞Ì√∂¿ª ±◊∏≤
+	//∞Ì√∂¿ª ±◊∏≤	
 	SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
 	
 
@@ -135,12 +134,12 @@ void MainStage::HandleEvents()
 			// If the mouse left button is pressed. 
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
-				if (!g_stage_flag_running)
+				/*if (!g_stage_flag_running)
 				{
 					g_current_game_phase = PHASE_ENDING;
 					InitGameObjectState();
 				}
-				/*delete game_phases[g_current_game_phase];
+				delete game_phases[g_current_game_phase];
 				game_phases[g_current_game_phase] = new Ending;*/
 			}
 			break;
@@ -177,7 +176,8 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	//pair<int, int> tempPos = CreateRandomPosition(); // ø¨∑·¿« ¿ßƒ° º≥¡§
 	SDL_Rect fuel_dst_init = { 100, 100, 50, 50 };
 	g_fuel = new Fuel(fuel_dst_init);
-
+	
+	cout << 1;
 	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
 	g_iron = new Iron(iron_dst_init);
 

@@ -6,9 +6,9 @@ class Fuel : public ItemInterface
 {
 private:
 	int amount;
-	
+	// 아이템 종류	
 public:
-	Fuel(SDL_Rect dst_fuel) : amount(0), ItemInterface(dst_fuel) {
+	Fuel(SDL_Rect dst_fuel) : amount(0), ItemInterface(dst_fuel, FUEL) {
 
 	};
 	virtual ~Fuel();
