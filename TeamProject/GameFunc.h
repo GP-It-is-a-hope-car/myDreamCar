@@ -15,7 +15,7 @@ void ClearGame();
 
 // Game Phases
 const int PHASE_INTRO = 0;
-const int PHASE_STAGE1 = 1;
+const int PHASE_MAINSTAGE = 1;
 const int PHASE_ENDING = 2;
 
 extern int g_current_game_phase;
@@ -38,17 +38,14 @@ class ItemInterface
 {
 private:
 	//아이템 그리기에 필요한 기본 요소
-	SDL_Texture* texture_item_;
-	SDL_Rect source_rect_item_;
+	/*SDL_Texture* texture_item_;
+	SDL_Rect source_rect_item_;*/
 	SDL_Rect dest_rect_item_;
 public:
-	ItemInterface() = default;
+	ItemInterface(SDL_Rect dst_item) : dest_rect_item_(dst_item) {};
 	virtual ~ItemInterface() = default;
 
-	virtual double width() { return dest_rect_item_.w; }
-	virtual double height() { return dest_rect_item_.h; }
-	virtual double posX() { return dest_rect_item_.x; }
-	virtual double posY() { return dest_rect_item_.y; }
+	virtual SDL_Rect* getRect() { return &dest_rect_item_; }
 };
 
 extern PhaseInterface* game_phases[3];

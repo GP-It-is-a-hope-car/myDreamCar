@@ -13,48 +13,66 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\GameObject">
+      <UniqueIdentifier>{97ac0277-c46b-4a45-8288-9af83e66d082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Phase">
+      <UniqueIdentifier>{0ef60c75-fb5c-4f53-9a60-16a61678477f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GameObect">
+      <UniqueIdentifier>{71afb868-8cf1-4dc5-9379-7ef5aa990f5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Phase">
+      <UniqueIdentifier>{bb04f0ad-0ba7-44e8-93be-28315f336aa6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Platform.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="GameFunc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Iron.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Truck.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\GameObect</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일\GameObect</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>헤더 파일\GameObect</Filter>
+    </ClInclude>
+    <ClInclude Include="Iron.h">
+      <Filter>헤더 파일\GameObect</Filter>
+    </ClInclude>
+    <ClInclude Include="MainStage.h">
+      <Filter>헤더 파일\Phase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="mainGame.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="GameFunc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Fuel.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Fuel.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Iron.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Truck.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Fuel.h">
+      <Filter>헤더 파일\GameObect</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainStage.cpp">
+      <Filter>소스 파일\Phase</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

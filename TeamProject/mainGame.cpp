@@ -1,5 +1,5 @@
 #include "GameFunc.h"
-
+#include "MainStage.h"
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
 bool g_flag_running;
@@ -23,10 +23,11 @@ int main(int argc, char* argv[]) {
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 	InitGame();
 
-	/*game_phases[PHASE_INTRO] = new Intro;
-	game_phases[PHASE_STAGE1] = new Stage1;
-	game_phases[PHASE_ENDING] = new Ending;*/
+	g_current_game_phase = PHASE_MAINSTAGE;
 
+	/*game_phases[PHASE_INTRO] = new Intro;	
+	game_phases[PHASE_ENDING] = new Ending;*/
+	game_phases[PHASE_MAINSTAGE] = new MainStage;
 	//g_current_game_phase = PHASE_INTRO;
 
 	g_last_time_ms = SDL_GetTicks();
@@ -40,9 +41,9 @@ int main(int argc, char* argv[]) {
 		if (cur_time_ms - g_last_time_ms < 33)
 			continue;
 
-		/*game_phases[g_current_game_phase]->HandleEvents();
+		game_phases[g_current_game_phase]->HandleEvents();
 		game_phases[g_current_game_phase]->Update();
-		game_phases[g_current_game_phase]->Render();*/
+		game_phases[g_current_game_phase]->Render();
 
 		SDL_Delay(30);	// 30 밀리세컨드 기다린다.
 		g_last_time_ms = cur_time_ms;

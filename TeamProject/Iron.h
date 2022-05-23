@@ -7,7 +7,8 @@ class Iron : public ItemInterface
 private:
 	int weight;
 public:
-	Iron();
+	Iron(SDL_Rect dst_iron) : weight(0), ItemInterface(dst_iron) {
+	};
 	virtual ~Iron();
 
 	virtual int getWeight() { return weight; }

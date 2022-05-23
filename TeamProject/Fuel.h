@@ -6,8 +6,11 @@ class Fuel : public ItemInterface
 {
 private:
 	int amount;
+	
 public:
-	Fuel();
+	Fuel(SDL_Rect dst_fuel) : amount(0), ItemInterface(dst_fuel) {
+
+	};
 	virtual ~Fuel();
 
 	virtual int getAmount() { return amount; }

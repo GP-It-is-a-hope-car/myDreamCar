@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="GameFunc.h" />
     <ClInclude Include="Iron.h" />
+    <ClInclude Include="MainStage.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Truck.h" />
@@ -153,7 +154,8 @@
     <ClCompile Include="Fuel.h" />
     <ClCompile Include="GameFunc.cpp" />
     <ClCompile Include="Iron.cpp" />
-    <ClCompile Include="mainGame.cpp" />
+    <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="MainStage.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Truck.cpp" />
