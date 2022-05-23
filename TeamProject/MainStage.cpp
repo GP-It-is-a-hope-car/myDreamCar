@@ -55,6 +55,11 @@ MainStage::MainStage()
 	// Clear the console screen.
 	// 표준출력 화면을 깨끗히 지운다.
 	//system("cls");
+	
+	// 시간 관련 변수
+	game_time = 360; //360초
+	time_ms=0; 
+	time_sec=0;
 }
 
 /////////////////////////////////////////////////////////////
@@ -66,6 +71,9 @@ MainStage::MainStage()
 void MainStage::Update() {
 
 	g_elapsed_time_ms += 33;
+	if (time_sec < 0) {
+		//g_current_game_phase = PHASE_ENDING;
+	}
 }
 
 /////////////////////////////////////////////////////////////
@@ -89,6 +97,15 @@ void MainStage::Render() {
 	//고철을 그림	
 	SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
 	
+	//제한 시간을 그림
+	{
+		SDL_Rect r;
+		r.x = 100;
+		r.y = 50;
+		r.w = text_time_rect.w = 50;
+		r.h = text_time_rect.h = 50;
+		SDL_RenderCopy(g_renderer, text_time, 0, &r);
+	}
 
 	/*if (!g_stage_flag_running)
 		DrawGameOverText();*/
@@ -147,6 +164,14 @@ void MainStage::HandleEvents()
 		default:
 			break;
 		}
+	}
+	{
+		static Uint32 last_ticks = SDL_GetTicks();
+		Uint32 current_ticks = SDL_GetTicks();
+		time_ms += current_ticks - last_ticks;
+		time_sec = game_time - (time_ms / 1000);
+		UpdateTimeTexture(time_sec);	
+		last_ticks = time_ms;
 	}
 }
 
@@ -302,4 +327,16 @@ void MainStage::InitTexts()
 
 	g_gameover_text_kr = SDL_CreateTextureFromSurface(g_renderer, tmp_surface_1);
 	SDL_FreeSurface(tmp_surface_1);
+}
+void MainStage::UpdateTimeTexture(int ms) {
+
+	SDL_Surface* tmp2_surface = TTF_RenderText_Blended(g_font_gameover, std::to_string((long long)ms).c_str(), black);
+
+	text_time_rect.x = 0;
+	text_time_rect.y = 0;
+	text_time_rect.w = tmp2_surface->w;
+	text_time_rect.h = tmp2_surface->h;
+	text_time = SDL_CreateTextureFromSurface(g_renderer, tmp2_surface);
+	SDL_FreeSurface(tmp2_surface);
+
 }

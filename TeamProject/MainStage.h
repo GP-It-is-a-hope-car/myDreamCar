@@ -33,6 +33,9 @@ private:
 	SDL_Color white = { 255, 255, 255, 0 }; // »ö±ò ¼±¾ð
 	SDL_Color black = { 0, 0, 0, 0 }; // »ö±ò ¼±¾ð
 
+	SDL_Texture* text_time;
+	SDL_Rect text_time_rect; 
+	
 	Truck* g_truck;
 	ItemInterface* g_fuel;
 	ItemInterface* g_iron;
@@ -41,6 +44,9 @@ private:
 	int g_cur_key;
 	int g_stage_last_time_ms;
 	bool g_stage_flag_running, g_stage_is_colliding;
+	int time_ms; 
+	int time_sec;
+	int game_time;
 
 	// Èê·¯°£ ½Ã°£ ±â·Ï
 	double g_elapsed_time_ms;
@@ -59,6 +65,7 @@ public:
 	void DrawGameOverText();
 	void InitChunk();
 	void InitTexts();
+	void UpdateTimeTexture(int ms);
 	void MakeGameObjTextures();
 	//bool GetApple();
 	//void SnakeMove();
