@@ -142,7 +142,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Ending.h" />
     <ClInclude Include="GameFunc.h" />
+    <ClInclude Include="Intro.h" />
     <ClInclude Include="Iron.h" />
     <ClInclude Include="MainStage.h" />
     <ClInclude Include="Platform.h" />
@@ -150,9 +152,11 @@
     <ClInclude Include="Truck.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ending.cpp" />
     <ClCompile Include="Fuel.cpp" />
     <ClCompile Include="Fuel.h" />
     <ClCompile Include="GameFunc.cpp" />
+    <ClCompile Include="Intro.cpp" />
     <ClCompile Include="Iron.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MainStage.cpp" />
