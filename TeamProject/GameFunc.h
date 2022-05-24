@@ -1,6 +1,7 @@
 #pragma once
 
 #include<iostream>
+#include<vector>
 #include<cstdlib>
 #include<ctime>
 #include <string>
@@ -8,6 +9,7 @@
 #include "SDL_ttf.h"
 #include "SDL_mixer.h"
 #include "SDL_image.h"
+#include<cmath>
 
 
 void InitGame();
@@ -42,18 +44,18 @@ class ItemInterface
 {
 private:
 	//아이템 그리기에 필요한 기본 요소
-	/*SDL_Texture* texture_item_;
-	SDL_Rect source_rect_item_;*/
+	SDL_Texture* texture_item_;
+	//SDL_Rect source_rect_item_;
 	SDL_Rect dest_rect_item_;
 	int item_type;
 public:
 	ItemInterface(SDL_Rect dst_item, int it) : dest_rect_item_(dst_item), item_type(it) {};
 	virtual ~ItemInterface() = default;
 
-	virtual SDL_Rect* getRect() { return &dest_rect_item_; }
+	virtual SDL_Rect* getDstRect() { return &dest_rect_item_; }
 	virtual int getItemType() { return item_type; }
-	
-	
+	virtual SDL_Texture* getTexture() = 0;
+	virtual SDL_Rect* getSrcRect() = 0;
 };
 
 extern PhaseInterface* game_phases[3];

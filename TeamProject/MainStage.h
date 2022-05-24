@@ -21,12 +21,10 @@ private:
 	SDL_Texture* g_truck_sheet_texture;
 	//SDL_Rect g_destination_apple;
 
-	SDL_Rect g_fuel_source_rect; // 연료 이미지에서 잘라오는 부분
-	SDL_Texture* g_fuel_sheet_texture;
+	
 	//SDL_Rect g_destination_apple;
 
-	SDL_Rect g_iron_source_rect; // 고철 이미지에서 잘라오는 부분
-	SDL_Texture* g_iron_sheet_texture;
+	
 	//SDL_Rect g_destination_apple;
 
 	TTF_Font* g_font_gameover; // 게임 폰트 선언
@@ -39,8 +37,9 @@ private:
 	SDL_Rect text_time_rect; 
 	
 	Truck* g_truck;
-	ItemInterface* g_fuel;
-	ItemInterface* g_iron;
+	vector<ItemInterface*> item_arr;
+	/*ItemInterface* g_fuel;
+	ItemInterface* g_iron;*/
 
 	bool visited[13][13];
 	int g_cur_key;
@@ -73,6 +72,7 @@ public:
 	//void SnakeMove();
 	//void MakeSnake();
 	void CheckCanCreateItem(int windowX, int windowY);
+	int Random(int n);
 	//void CreateApple();
 	pair<int, int> CreateRandomPosition();
 };

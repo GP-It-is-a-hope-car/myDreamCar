@@ -48,16 +48,6 @@ MainStage::MainStage()
 	g_truck_source_rect.w = 160;
 	g_truck_source_rect.h = 80;
 
-	g_fuel_source_rect.x = 0; // ¿¬·á °¡Á®¿À±â
-	g_fuel_source_rect.y = 0;
-	g_fuel_source_rect.w = 64;
-	g_fuel_source_rect.h = 64;
-
-	g_iron_source_rect.x = 145; // »ç°ú °¡Á®¿À±â
-	g_iron_source_rect.y = 138;
-	g_iron_source_rect.w = 392;
-	g_iron_source_rect.h = 421;
-
 	//°ÔÀÓ ¿ÀºêÁ§Æ®µéÀÇ ÃÊ±âÈ­
 	InitGameObjectState();
 
@@ -128,12 +118,16 @@ void MainStage::Render() {
 
 	//Æ®·°À» ±×¸²
 	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getRect());
+	//
 
-	//¿¬·á¸¦ ±×¸²
-	SDL_RenderCopy(g_renderer, g_fuel_sheet_texture, &g_fuel_source_rect, g_fuel->getRect());
 
-	//°íÃ¶À» ±×¸²	
-	SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
+	//item_arrÀÇ ÀÎÀÚµéÀ» ±×¸²(°íÃ¶,¿¬·á)
+	for (int i = 0; i < item_arr.size(); i++)
+	{
+		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
+	}
+	
+	//SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
 
 	//ÇÃ·§Æû
 	ground->draw_pf();
@@ -238,8 +232,8 @@ void MainStage::HandleEvents()
 MainStage::~MainStage()
 {
 	SDL_DestroyTexture(g_truck_sheet_texture); // Æ®·° ¸Ş¸ğ¸® ÇØÁ¦
-	SDL_DestroyTexture(g_fuel_sheet_texture); // ¿¬·á ¸Ş¸ğ¸® ÇØÁ¦
-	SDL_DestroyTexture(g_iron_sheet_texture); // °íÃ¶ ¸Ş¸ğ¸® ÇØÁ¦
+	/*SDL_DestroyTexture(g_fuel_sheet_texture); // ¿¬·á ¸Ş¸ğ¸® ÇØÁ¦
+	SDL_DestroyTexture(g_iron_sheet_texture);*/ // °íÃ¶ ¸Ş¸ğ¸® ÇØÁ¦
 	SDL_DestroyTexture(g_gameover_text_kr); // °ÔÀÓ¿À¹ö ÅØ½ºÆ® ¸Ş¸ğ¸® ÇØÁ¦
 
 
@@ -259,11 +253,20 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 
 	//pair<int, int> tempPos = CreateRandomPosition(); // ¿¬·áÀÇ À§Ä¡ ¼³Á¤
 	SDL_Rect fuel_dst_init = { 150, 150, 50, 50 };
-	g_fuel = new Fuel(fuel_dst_init);
-	
-	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
-	g_iron = new Iron(iron_dst_init);
+	ItemInterface *fuel = new Fuel(fuel_dst_init);
 
+	item_arr.push_back(fuel);
+
+	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
+	ItemInterface *iron = new Iron(iron_dst_init);
+
+	item_arr.push_back(iron);
+
+	iron_dst_init = { 500, 500, 50, 50 };
+
+	iron = new Iron(iron_dst_init);
+
+	item_arr.push_back(iron);
 	/*tempPos = CreateRandomPosition(); // »ç°úÀÇ À§Ä¡ ¼³Á¤
 	g_destination_apple.x = tempPos.first;
 	g_destination_apple.y = tempPos.second;
@@ -283,18 +286,9 @@ void MainStage::MakeGameObjTextures()
 	SDL_SetColorKey(truck_sheet_surface, SDL_TRUE, SDL_MapRGB(truck_sheet_surface->format, 0, 155, 133));
 	g_truck_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, truck_sheet_surface);
 
-	SDL_Surface* fuel_sheet_surface = IMG_Load("../../Resources/Fuel.png"); // ÀÌ¹ÌÁö ÆÄÀÏÀ» °¡Á®¿È
-	SDL_SetColorKey(fuel_sheet_surface, SDL_TRUE, SDL_MapRGB(fuel_sheet_surface->format, 223, 113, 38));
-	g_fuel_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, fuel_sheet_surface);
-
-	SDL_Surface* iron_sheet_surface = IMG_Load("../../Resources/apple.png"); // ÀÌ¹ÌÁö ÆÄÀÏÀ» °¡Á®¿È
-	SDL_SetColorKey(iron_sheet_surface, SDL_TRUE, SDL_MapRGB(iron_sheet_surface->format, 255, 255, 255));
-	g_iron_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, iron_sheet_surface);
+	
 
 	SDL_FreeSurface(truck_sheet_surface);
-	SDL_FreeSurface(fuel_sheet_surface);
-	SDL_FreeSurface(iron_sheet_surface);
-	
 
 }
 
@@ -354,9 +348,23 @@ void MainStage::CheckCanCreateItem(int windowX, int windowY)
 		if (platform_x > left_up_x && platform_y > left_up_y &&
 			platform_x < right_down_x && platform_y < right_down_y)
 		{
-
+			cout << "¹ß°ß!!" << "\n";
+			flatform_tmp.push_back(platform_arr[i]);
 		}
 	}
+	int selected_platform_idx = Random(flatform_tmp.size());
+	SDL_Rect rect = flatform_tmp[selected_platform_idx]->getRect();
+
+
+}
+int MainStage::Random(int n) // 0¿¡¼­ n - 1±îÁö ·£´ı ¼ö ¹ß»ı
+{
+	srand((unsigned int)time(NULL));
+
+	int rnd = rand();
+	int a = (int)(rnd % (n));
+
+	return a;
 }
 void MainStage::DrawGameText()
 {
