@@ -1,5 +1,8 @@
 #include "GameFunc.h"
 #include "MainStage.h"
+#include "Intro.h"
+#include "Ending.h"
+
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
 bool g_flag_running;
@@ -25,12 +28,12 @@ int main(int argc, char* argv[]) {
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 	InitGame();
 
-	g_current_game_phase = PHASE_MAINSTAGE;
-
-	/*game_phases[PHASE_INTRO] = new Intro;	
-	game_phases[PHASE_ENDING] = new Ending;*/
+	//g_current_game_phase = PHASE_MAINSTAGE;
+		
+	game_phases[PHASE_INTRO] = new Intro;
+	game_phases[PHASE_ENDING] = new Ending;
 	game_phases[PHASE_MAINSTAGE] = new MainStage;
-	//g_current_game_phase = PHASE_INTRO;
+	g_current_game_phase = PHASE_INTRO;
 
 	g_last_time_ms = SDL_GetTicks();
 

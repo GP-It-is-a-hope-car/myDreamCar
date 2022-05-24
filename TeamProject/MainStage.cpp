@@ -64,6 +64,13 @@ MainStage::MainStage()
 	// 표준출력 화면을 깨끗히 지운다.
 	//system("cls");
 	
+	// 연료통 생성
+	SDL_Surface* status_surface = IMG_Load("../../Resources/gauge.png");
+	fuel_status = SDL_CreateTextureFromSurface(g_renderer, status_surface);
+	SDL_FreeSurface(status_surface);
+	status_source_rect = { 0,0,200,100 };
+	status_destination_rect = { 400,600,200,50 };
+
 	// 시간 관련 변수
 	game_time = 360; //360초
 	time_ms=0; 
@@ -119,7 +126,7 @@ void MainStage::Render() {
 	//트럭을 그림
 	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getRect());
 	//
-
+	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
 	//item_arr의 인자들을 그림(고철,연료)
 	for (int i = 0; i < item_arr.size(); i++)
@@ -214,13 +221,16 @@ void MainStage::HandleEvents()
 			break;
 		}
 	}
-	{
+	{// 시간
 		static Uint32 last_ticks = SDL_GetTicks();
 		Uint32 current_ticks = SDL_GetTicks();
 		time_ms += current_ticks - last_ticks;
 		time_sec = game_time - (time_ms / 1000);
 		UpdateTimeTexture(time_sec);	
 		last_ticks = time_ms;
+		//연료통
+		status_source_rect.w -= 0.2;
+		status_destination_rect.w -= 0.2;
 	}
 }
 
@@ -235,8 +245,8 @@ MainStage::~MainStage()
 	/*SDL_DestroyTexture(g_fuel_sheet_texture); // 연료 메모리 해제
 	SDL_DestroyTexture(g_iron_sheet_texture);*/ // 고철 메모리 해제
 	SDL_DestroyTexture(g_gameover_text_kr); // 게임오버 텍스트 메모리 해제
-
-
+	SDL_DestroyTexture(fuel_status); // 연료통 메모리 해제
+	SDL_DestroyTexture(text_time); // 제한시간 텍스트 메모리 해제
 	TTF_CloseFont(g_font_gameover); // 폰트 메모리 해제
 
 	delete p;

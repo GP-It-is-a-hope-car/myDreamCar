@@ -16,7 +16,6 @@ private:
 	SDL_Rect g_bg_1_source_rect; // 배경
 	SDL_Rect g_bg_2_source_rect;
 
-	
 	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
 	//SDL_Rect g_destination_apple;
@@ -33,9 +32,13 @@ private:
 	SDL_Color white = { 255, 255, 255, 0 }; // 색깔 선언
 	SDL_Color black = { 0, 0, 0, 0 }; // 색깔 선언
 
-	SDL_Texture* text_time;
+	SDL_Texture* text_time; // 남은 시간 선언
 	SDL_Rect text_time_rect; 
-	
+
+	SDL_Texture* fuel_status;
+	SDL_Rect status_source_rect;
+	SDL_Rect status_destination_rect;
+
 	Truck* g_truck;
 	vector<ItemInterface*> item_arr;
 	/*ItemInterface* g_fuel;
