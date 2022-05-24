@@ -12,18 +12,19 @@ using namespace std;
 
 class MainStage : public PhaseInterface
 {
-private:		
+private:
 	SDL_Rect g_bg_1_source_rect; // 배경
 	SDL_Rect g_bg_2_source_rect;
+
 
 	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
 	//SDL_Rect g_destination_apple;
 
-	
+
 	//SDL_Rect g_destination_apple;
 
-	
+
 	//SDL_Rect g_destination_apple;
 
 	TTF_Font* g_font_gameover; // 게임 폰트 선언
@@ -33,7 +34,7 @@ private:
 	SDL_Color black = { 0, 0, 0, 0 }; // 색깔 선언
 
 	SDL_Texture* text_time; // 남은 시간 선언
-	SDL_Rect text_time_rect; 
+	SDL_Rect text_time_rect;
 
 	SDL_Texture* fuel_status;
 	SDL_Rect status_source_rect;
@@ -48,13 +49,15 @@ private:
 	int g_cur_key;
 	int g_stage_last_time_ms;
 	bool g_stage_flag_running, g_stage_is_colliding;
-	int time_ms; 
+	int time_ms;
 	int time_sec;
 	int game_time;
+
 	int fuel_amount; // 연료통 총량 : 200
 	int fuel_num; // 연료량 증가시키기 위한 변수
 	int fuel_time; // 연료통 감소 시간 받는 변수
 
+	float itemTime = 0;
 	// 흘러간 시간 기록
 	double g_elapsed_time_ms;
 
@@ -77,7 +80,8 @@ public:
 	//bool GetApple();
 	//void SnakeMove();
 	//void MakeSnake();
-	void CheckCanCreateItem(int windowX, int windowY);
+	ItemInterface* CreateItem(int windowX, int windowY);
+	ItemInterface* DistinctItem();
 	int Random(int n);
 	//void CreateApple();
 	pair<int, int> CreateRandomPosition();

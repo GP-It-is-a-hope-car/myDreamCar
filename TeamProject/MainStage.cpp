@@ -9,8 +9,8 @@
 #define CELL 50
 using namespace std;
 
-Player * p;
-Platform * ground;
+Player* p;
+Platform* ground;
 vector<Platform*> platform_arr;
 
 enum Key
@@ -20,7 +20,7 @@ enum Key
 	UP,
 	DOWN
 };
-vector<Platform*> flatform_tmp;
+vector<Platform*> platform_tmp;
 
 bool Left;
 bool Right;
@@ -53,17 +53,16 @@ MainStage::MainStage()
 
 	p = new Player;
 	ground = new Platform;
-	
-	for (int i = 1; i <= 3; i++) // ÇÃ·§Æû À§Ä¡ for¹®À¸·Î ¼±¾ðÇØÁÖ°í arr¿¡ ³Ö¾îÁÖÀÚ!
+
+	for (int i = 1; i <= 5; i++) // ÇÃ·§Æû À§Ä¡ for¹®À¸·Î ¼±¾ðÇØÁÖ°í arr¿¡ ³Ö¾îÁÖÀÚ!
 	{
-		Platform *pf = new Platform(50*i, 100*i);
-		platform_arr.push_back(pf);		
+		Platform* pf = new Platform(50 * i, 100 * i);
+		platform_arr.push_back(pf);
 	}
-	CheckCanCreateItem(700, 700);
 	// Clear the console screen.
 	// Ç¥ÁØÃâ·Â È­¸éÀ» ±ú²ýÈ÷ Áö¿î´Ù.
 	//system("cls");
-	
+
 	// ¿¬·áÅë »ý¼º
 	SDL_Surface* status_surface = IMG_Load("../../Resources/gauge.png");
 	fuel_status = SDL_CreateTextureFromSurface(g_renderer, status_surface);
@@ -73,12 +72,13 @@ MainStage::MainStage()
 
 	// ½Ã°£ °ü·Ã º¯¼ö
 	game_time = 360; //360ÃÊ
-	time_ms=0; 
-	time_sec=0;
+	time_ms = 0;
+	time_sec = 0;
+
 	// ¿¬·á °ÔÀÌÁö °ü·Ã º¯¼ö
-	fuel_amount=200; 
-	fuel_num=200; 
-	fuel_time=0; 
+	fuel_amount = 200;
+	fuel_num = 200;
+	fuel_time = 0;
 
 	Left = false;
 	Right = false;
@@ -103,12 +103,43 @@ void MainStage::Update() {
 	p->move_jump(g_timestep_s);
 	p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
 
-	
+
 	for (int i = 0; i < platform_arr.size(); i++)
 	{
 		p->testOnPlatform(platform_arr[i]->posX(), platform_arr[i]->posY(), platform_arr[i]->width(), platform_arr[i]->height());
 	}
-	
+
+	{	// ¾ÆÀÌÅÛ ·£´ý »ý¼º ÆÄÆ®
+		itemTime += 1 / 30.0f;
+		if (itemTime >= 5)
+		{
+			itemTime = 0;
+			//ÇÃ·¹ÀÌ¾î ÁÖº¯ 700, 700À» Å½»ö ÈÄ ¹ßÆÇÀÌ Á¸ÀçÇÏ¸é »ý¼ºÇÒ ¾ÆÀÌÅÛ ¹ÝÈ¯
+			ItemInterface* newItem = CreateItem(700, 700);
+			if (newItem != nullptr)
+			{
+				item_arr.push_back(newItem);
+			}
+		}
+	}
+
+	{	//¾ÆÀÌÅÛ ¸ÔÀ½
+		ItemInterface* item = DistinctItem();
+
+		if (item != nullptr)
+		{
+			if (item->getItemType() == FUEL)
+			{
+				cout << "GET FUEL!!";
+			}
+			else
+			{
+				cout << "GET IRON!!";
+			}
+		}
+	}
+
+
 	g_elapsed_time_ms += 33;
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
@@ -137,20 +168,18 @@ void MainStage::Render() {
 	{
 		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
 	}
-	
-	//SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
 
 	//ÇÃ·§Æû
 	ground->draw_pf();
 	for (int i = 0; i < platform_arr.size(); i++)
-	{		
+	{
 		platform_arr[i]->draw_pf();
 	}
-	
+
 
 	//ÇÃ·¹ÀÌ¾î
 	p->draw_player();
-	
+
 	//Á¦ÇÑ ½Ã°£À» ±×¸²
 	{
 		SDL_Rect r;
@@ -164,7 +193,7 @@ void MainStage::Render() {
 	/*if (!g_stage_flag_running)
 		DrawGameOverText();*/
 
-	// ¹é¿¡¼­ ±×¸° ±×¸²À» ÇÑ¹ø¿¡ °¡Á®¿È
+		// ¹é¿¡¼­ ±×¸° ±×¸²À» ÇÑ¹ø¿¡ °¡Á®¿È
 	SDL_RenderPresent(g_renderer);
 }
 
@@ -220,22 +249,23 @@ void MainStage::HandleEvents()
 				Right = false;
 			}
 			break;
-			
+
 		default:
 			break;
 		}
 	}
-	{   // ½Ã°£
+	{
 		static Uint32 last_ticks = SDL_GetTicks();
 		Uint32 current_ticks = SDL_GetTicks();
 		time_ms += current_ticks - last_ticks;
 		time_sec = game_time - (time_ms / 1000);
-		UpdateTimeTexture(time_sec);	
+		UpdateTimeTexture(time_sec);
 		last_ticks = time_ms;
+
 		//¿¬·áÅë
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
-		fuel_time+= fuel_cur_time - fuel_last_time;
+		fuel_time += fuel_cur_time - fuel_last_time;
 		fuel_amount = fuel_num - (fuel_time / 1000);
 		fuel_last_time = fuel_time;
 		status_source_rect.w = fuel_amount;
@@ -262,6 +292,7 @@ MainStage::~MainStage()
 	SDL_DestroyTexture(g_gameover_text_kr); // °ÔÀÓ¿À¹ö ÅØ½ºÆ® ¸Þ¸ð¸® ÇØÁ¦
 	SDL_DestroyTexture(fuel_status); // ¿¬·áÅë ¸Þ¸ð¸® ÇØÁ¦
 	SDL_DestroyTexture(text_time); // Á¦ÇÑ½Ã°£ ÅØ½ºÆ® ¸Þ¸ð¸® ÇØÁ¦
+
 	TTF_CloseFont(g_font_gameover); // ÆùÆ® ¸Þ¸ð¸® ÇØÁ¦
 
 	delete p;
@@ -276,8 +307,7 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	SDL_Rect truck_dst_init = { 0, 500, 160, 80 };
 	g_truck = new Truck(truck_dst_init);
 
-	//pair<int, int> tempPos = CreateRandomPosition(); // ¿¬·áÀÇ À§Ä¡ ¼³Á¤
-	SDL_Rect fuel_dst_init = { 150, 150, 50, 50 };
+	/*SDL_Rect fuel_dst_init = {150, 150, 50, 50};
 	ItemInterface *fuel = new Fuel(fuel_dst_init);
 
 	item_arr.push_back(fuel);
@@ -285,25 +315,10 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
 	ItemInterface *iron = new Iron(iron_dst_init);
 
-	item_arr.push_back(iron);
+	item_arr.push_back(iron);*/
 
-	iron_dst_init = { 500, 500, 50, 50 };
-
-	iron = new Iron(iron_dst_init);
-
-	item_arr.push_back(iron);
-	/*tempPos = CreateRandomPosition(); // »ç°úÀÇ À§Ä¡ ¼³Á¤
-	g_destination_apple.x = tempPos.first;
-	g_destination_apple.y = tempPos.second;
-	g_destination_apple.w = 50;
-	g_destination_apple.h = 50;*/
-	
-
-	/*g_cur_key = -1;
-	snakeList.clear();
-	g_stage_flag_running = true;
-	g_stage_is_colliding = false;
-	MakeSnake();*/
+	item_arr.clear();
+	platform_arr.clear();
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -311,53 +326,12 @@ void MainStage::MakeGameObjTextures()
 	SDL_SetColorKey(truck_sheet_surface, SDL_TRUE, SDL_MapRGB(truck_sheet_surface->format, 0, 155, 133));
 	g_truck_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, truck_sheet_surface);
 
-	
-
 	SDL_FreeSurface(truck_sheet_surface);
-
 }
 
-/*void MainStage::CreateApple()
+ItemInterface* MainStage::CreateItem(int windowX, int windowY)
 {
-
-}
-bool MainStage::GetApple()
-{
-	int snake_x = snakeList.front().destination_snake.x;
-	int snake_y = snakeList.front().destination_snake.y;
-
-	int apple_x = g_destination_apple.x;
-	int apple_y = g_destination_apple.y;
-
-	if (snake_x == apple_x && snake_y == apple_y)
-	{
-		if (g_stage_is_colliding) return false;
-
-		g_stage_is_colliding = true;
-		return true;
-	}
-	else return false;
-}*/
-pair<int, int> MainStage::CreateRandomPosition()
-{
-	//CheckIsSnakeBody();
-
-	srand((unsigned int)time(NULL));
-
-	int x, y;
-	while (true)
-	{
-		int rnd1 = rand(); int rnd2 = rand();
-		x = (int)(rnd1 % 12 + 1); y = (int)(rnd2 % 12 + 1);
-
-		if (!visited[x][y]) break;
-	}
-
-	return { x * CELL, y * CELL };
-}
-void MainStage::CheckCanCreateItem(int windowX, int windowY)
-{
-	flatform_tmp.clear();
+	platform_tmp.clear();
 
 	int left_up_x = p->posX() - windowX / 2, left_up_y = p->posY() - windowY / 2;
 	int right_down_x = p->posX() + windowX / 2, right_down_y = p->posY() + windowY / 2;
@@ -374,13 +348,29 @@ void MainStage::CheckCanCreateItem(int windowX, int windowY)
 			platform_x < right_down_x && platform_y < right_down_y)
 		{
 			cout << "¹ß°ß!!" << "\n";
-			flatform_tmp.push_back(platform_arr[i]);
+			platform_tmp.push_back(platform_arr[i]);
 		}
 	}
-	int selected_platform_idx = Random(flatform_tmp.size());
-	SDL_Rect rect = flatform_tmp[selected_platform_idx]->getRect();
+	if (platform_tmp.empty()) return nullptr;
 
+	int selected_platform_idx = Random(platform_tmp.size());
+	SDL_Rect rect = platform_tmp[selected_platform_idx]->getRect();
+	cout << "rect.x: " << rect.x << " rect.y: " << rect.y << "\n";
 
+	rect.w = 50; rect.h = 50;
+	int addX = Random(rect.w);
+	rect.x += addX; rect.y -= 50;
+	ItemInterface* item;
+
+	if (Random(2) % 2 == FUEL)
+	{
+		item = new Fuel(rect);
+	}
+	else
+	{
+		item = new Iron(rect);
+	}
+	return item;
 }
 int MainStage::Random(int n) // 0¿¡¼­ n - 1±îÁö ·£´ý ¼ö ¹ß»ý
 {
@@ -390,6 +380,25 @@ int MainStage::Random(int n) // 0¿¡¼­ n - 1±îÁö ·£´ý ¼ö ¹ß»ý
 	int a = (int)(rnd % (n));
 
 	return a;
+}
+ItemInterface* MainStage::DistinctItem()
+{
+	int player_x = p->posX() + p->width() / 2;
+	int player_y = p->posY() + p->height() / 2;
+	for (int i = 0; i < item_arr.size(); i++)
+	{
+		SDL_Rect item_rect = *item_arr[i]->getDstRect();
+
+		if (player_x > item_rect.x && player_y > item_rect.y &&
+			player_x < item_rect.x + item_rect.w &&
+			player_y < item_rect.y + item_rect.h)
+		{
+			ItemInterface* item = item_arr[i];
+			item_arr.erase(item_arr.begin() + i);
+			return item;
+		}
+	}
+	return nullptr;
 }
 void MainStage::DrawGameText()
 {
