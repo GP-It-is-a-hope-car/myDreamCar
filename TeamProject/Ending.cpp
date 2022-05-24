@@ -9,7 +9,7 @@ Ending::Ending()
 	SDL_Surface* temp_surface = IMG_Load("../../Resources/ending_prototype.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
-	source_rectangle_ = { 0.0.600.600 };
+	source_rectangle_ = { 0,0,600,600 };
 	destination_rectangle_ = { 0,0,700,700 };
 
 }

@@ -18,7 +18,7 @@ Player::Player()
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 0;
+	horizontalSpeed_ = 32;
 	mass_ = 2;
 	gravityAcc_ = 980;
 	isHoldItem_ = false;
@@ -152,10 +152,6 @@ void Player::move_jump(double timestep_s)
 	verticalSpeed_ = verticalSpeed_ + dt * gravityAcc_;
 }
 
-void Player::stop()
-{
-	horizontalSpeed_ = 0;
-}
 
 void Player::jump()
 {

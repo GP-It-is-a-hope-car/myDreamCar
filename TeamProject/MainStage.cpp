@@ -91,12 +91,10 @@ void MainStage::Update() {
 	{
 		p->move_left(g_timestep_s);
 	}
-
 	if (Right)
 	{
 		p->move_right(g_timestep_s);
 	}
-
 	p->move_jump(g_timestep_s);
 	p->testOnPlatform(pf1->posX(), pf1->posY(), pf1->width(), pf1->height());
 	p->testOnPlatform(pf2->posX(), pf2->posY(), pf2->width(), pf2->height());
@@ -172,12 +170,6 @@ void MainStage::HandleEvents()
 			}
 			if (event.key.keysym.sym == SDLK_RIGHT) {
 				Right = true;
-			}
-			if (event.key.keysym.sym == SDLK_UP) {
-				g_cur_key = Key::UP;
-			}
-			if (event.key.keysym.sym == SDLK_DOWN) {
-				g_cur_key = Key::DOWN;
 			}
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				p->jump();

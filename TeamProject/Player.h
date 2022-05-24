@@ -8,11 +8,10 @@ public:
 	Player();
 	~Player();
 
-	//좌우 이동, 점프 중 위치 계산, 입력 없을 시 멈추기
+	//좌우 이동, 점프 중 위치 계산
 	virtual void move_left(double timestep_s);
 	virtual void move_right(double timestep_s);
 	virtual void move_jump(double timestep_s);
-	virtual void stop();
 
 	//점프 - 플레이어 이동에서 핵심
 	virtual void jump();
