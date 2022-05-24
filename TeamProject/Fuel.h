@@ -23,7 +23,7 @@ public:
 
 		SDL_FreeSurface(fuel_sheet_surface);
 	};
-	virtual ~Fuel() {};
+	virtual ~Fuel();
 	virtual SDL_Texture* getTexture() {return fuel_sheet_texture_;}
 	virtual SDL_Rect* getSrcRect() { return &fuel_source_rect_; }
 	virtual int getAmount() { return amount; }

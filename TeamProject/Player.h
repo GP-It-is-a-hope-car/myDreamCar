@@ -39,8 +39,10 @@ public:
 	virtual void move_right(double timestep_s);
 	virtual void move_jump(double timestep_s);
 
-	double posX() { return dest_rect_player_.x; }
-	double posY() { return dest_rect_player_.y; }
+	int posX() { return dest_rect_player_.x; }
+	int posY() { return dest_rect_player_.y; }
+	int width() { return dest_rect_player_.w; }
+	int height() { return dest_rect_player_.h; }
 	
 	//점프 - 플레이어 이동에서 핵심
 	virtual void jump();

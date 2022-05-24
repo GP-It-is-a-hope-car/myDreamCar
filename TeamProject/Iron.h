@@ -22,6 +22,7 @@ public:
 		SDL_FreeSurface(iron_sheet_surface);
 	};
 	virtual ~Iron();
+
 	virtual SDL_Texture* getTexture() { return iron_sheet_texture; }
 	virtual SDL_Rect* getSrcRect() { return &g_iron_source_rect; }
 

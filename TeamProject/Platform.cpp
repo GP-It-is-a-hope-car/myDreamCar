@@ -11,7 +11,7 @@ Platform::Platform()
 
 	SDL_QueryTexture(texture_pf_, NULL, NULL, &source_rect_pf_.w, &source_rect_pf_.h);
 	source_rect_pf_.x = source_rect_pf_.y = 0;
-	dest_rect_pf_.x = 300;
+	dest_rect_pf_.x = 400;
 	dest_rect_pf_.y = 350;
 	dest_rect_pf_.w = source_rect_pf_.w;
 	dest_rect_pf_.h = source_rect_pf_.h;
