@@ -18,7 +18,7 @@ Player::Player()
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 32;
+	horizontalSpeed_ = 160;
 	mass_ = 2;
 	gravityAcc_ = 980;
 	isHoldItem_ = false;
@@ -127,7 +127,7 @@ void Player::move_left(double timestep_s)
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 32;
+	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
 	std::cout << dest_rect_player_.x << std::endl;
 }
@@ -139,7 +139,7 @@ void Player::move_right(double timestep_s)
 	//오른쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 32;
+	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
 	std::cout << dest_rect_player_.x << std::endl;
 }
