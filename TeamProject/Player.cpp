@@ -104,7 +104,7 @@ void Player::getItem()
 	//검사결과 겹치면 아이템을 획득
 	//isHoldItem = true
 	//ownItem = 들고 있는 아이템 종류
-	//이걸 위해서 아이템 클래스를 받아오거나 해야할 것 같음
+	//이걸 위해서 아이템 클래스를 받아오거나 해야할 것 같음 
 }
 
 void Player::giveItem()

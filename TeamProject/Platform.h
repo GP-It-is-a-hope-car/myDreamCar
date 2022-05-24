@@ -19,7 +19,7 @@ public:
 private:
 	//플랫폼 그리기에 필요한 기본 요소
 	SDL_Texture* texture_pf_;
-	SDL_Rect source_rect_pf_;
+	SDL_Rect source_rect_pf_ = {0,0,100,10};
 	SDL_Rect dest_rect_pf_;
 	
 };

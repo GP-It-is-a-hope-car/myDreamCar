@@ -3,14 +3,15 @@
 #include <windows.h>
 #include <string>
 #include <atlstr.h> // «—±πæÓ æ≤∑¡∏È « ø‰«‘
+#include<vector>
 
 #define SIZE 8
 #define CELL 50
 using namespace std;
 
 Player * p;
-Platform * pf1;
-Platform * pf2;
+Platform * ground;
+vector<Platform*> platform_arr;
 
 enum Key
 {
@@ -19,6 +20,7 @@ enum Key
 	UP,
 	DOWN
 };
+vector<Platform*> flatform_tmp;
 
 bool Left;
 bool Right;
@@ -56,16 +58,18 @@ MainStage::MainStage()
 	g_iron_source_rect.w = 392;
 	g_iron_source_rect.h = 421;
 
-
-
-
 	//∞‘¿” ø¿∫Í¡ß∆ÆµÈ¿« √ ±‚»≠
 	InitGameObjectState();
 
 	p = new Player;
-	pf1 = new Platform;
-	pf2 = new Platform(150, 300);
-
+	ground = new Platform;
+	
+	for (int i = 1; i <= 3; i++) // «√∑ß∆˚ ¿ßƒ° forπÆ¿∏∑Œ º±æ«ÿ¡÷∞Ì arrø° ≥÷æÓ¡÷¿⁄!
+	{
+		Platform *pf = new Platform(50*i, 100*i);
+		platform_arr.push_back(pf);		
+	}
+	CheckCanCreateItem(700, 700);
 	// Clear the console screen.
 	// «•¡ÿ√‚∑¬ »≠∏È¿ª ±˙≤˝»˜ ¡ˆøÓ¥Ÿ.
 	//system("cls");
@@ -96,8 +100,13 @@ void MainStage::Update() {
 		p->move_right(g_timestep_s);
 	}
 	p->move_jump(g_timestep_s);
-	p->testOnPlatform(pf1->posX(), pf1->posY(), pf1->width(), pf1->height());
-	p->testOnPlatform(pf2->posX(), pf2->posY(), pf2->width(), pf2->height());
+	p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
+
+	
+	for (int i = 0; i < platform_arr.size(); i++)
+	{
+		p->testOnPlatform(platform_arr[i]->posX(), platform_arr[i]->posY(), platform_arr[i]->width(), platform_arr[i]->height());
+	}
 	
 	g_elapsed_time_ms += 33;
 	if (time_sec < 0) {
@@ -127,8 +136,12 @@ void MainStage::Render() {
 	SDL_RenderCopy(g_renderer, g_iron_sheet_texture, &g_iron_source_rect, g_iron->getRect());
 
 	//«√∑ß∆˚
-	pf1->draw_pf();
-	pf2->draw_pf();
+	ground->draw_pf();
+	for (int i = 0; i < platform_arr.size(); i++)
+	{		
+		platform_arr[i]->draw_pf();
+	}
+	
 
 	//«√∑π¿ÃæÓ
 	p->draw_player();
@@ -233,8 +246,8 @@ MainStage::~MainStage()
 	TTF_CloseFont(g_font_gameover); // ∆˘∆Æ ∏ﬁ∏∏Æ «ÿ¡¶
 
 	delete p;
-	delete pf1;
-	delete pf2;
+	delete ground;
+	//delete pf2;
 
 	//Mix_FreeChunk(g_missile_fire_sound);
 }
@@ -245,10 +258,9 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	g_truck = new Truck(truck_dst_init);
 
 	//pair<int, int> tempPos = CreateRandomPosition(); // ø¨∑·¿« ¿ßƒ° º≥¡§
-	SDL_Rect fuel_dst_init = { 100, 100, 50, 50 };
+	SDL_Rect fuel_dst_init = { 150, 150, 50, 50 };
 	g_fuel = new Fuel(fuel_dst_init);
 	
-	cout << 1;
 	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
 	g_iron = new Iron(iron_dst_init);
 
@@ -324,15 +336,28 @@ pair<int, int> MainStage::CreateRandomPosition()
 
 	return { x * CELL, y * CELL };
 }
-/*void MainStage::CheckIsSnakeBody()
+void MainStage::CheckCanCreateItem(int windowX, int windowY)
 {
-	fill(&visited[0][0], &visited[12][13], false);
+	flatform_tmp.clear();
 
-	for (auto iter = snakeList.begin(); iter != snakeList.end(); iter++)
+	int left_up_x = p->posX() - windowX / 2, left_up_y = p->posY() - windowY / 2;
+	int right_down_x = p->posX() + windowX / 2, right_down_y = p->posY() + windowY / 2;
+
+	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() << "\n";
+	cout << "left_up_x: " << left_up_x << " left_up_y: " << left_up_y << "\n";
+	cout << "right_down_x: " << right_down_x << " right_down_y: " << right_down_y << "\n";
+
+	for (int i = 0; i < platform_arr.size(); i++)
 	{
-		visited[iter->destination_snake.x / 50][iter->destination_snake.y / 50] = true;
+		int platform_x = platform_arr[i]->posX();
+		int platform_y = platform_arr[i]->posY();
+		if (platform_x > left_up_x && platform_y > left_up_y &&
+			platform_x < right_down_x && platform_y < right_down_y)
+		{
+
+		}
 	}
-}*/
+}
 void MainStage::DrawGameText()
 {
 

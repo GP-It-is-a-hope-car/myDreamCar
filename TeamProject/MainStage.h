@@ -72,7 +72,7 @@ public:
 	//bool GetApple();
 	//void SnakeMove();
 	//void MakeSnake();
-	//void CheckIsGameOver(SDL_Rect snakeHeadRect);
+	void CheckCanCreateItem(int windowX, int windowY);
 	//void CreateApple();
 	pair<int, int> CreateRandomPosition();
 };

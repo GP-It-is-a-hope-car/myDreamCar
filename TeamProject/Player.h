@@ -4,6 +4,32 @@
 
 class Player
 {
+private:
+	//플레이어 그리기에 필요한 기본 요소
+	SDL_Texture* texture_player_;
+	SDL_Rect source_rect_player_;
+	SDL_Rect dest_rect_player_;
+
+	//필요할지도 몰라서 넣는 머리 위의 아이템 표시
+	SDL_Texture* texture_myItem_;
+	SDL_Rect source_rects_myItem_; // 아이템코드에 따라 배열의 요소에 접근 다르게 그리기?
+	SDL_Rect dest_rect_myItem_;
+
+	// SFX 예상 되는 거 작성한 것
+	Mix_Chunk* jump_sound_;
+	Mix_Chunk* move_sound_;
+	Mix_Chunk* get_item_sound_;
+	Mix_Chunk* give_item_sound_;
+
+	//필요할 것 같은 변수
+	double verticalSpeed_; //수직 - 점프랑 관련
+	double horizontalSpeed_; //수평 - 좌우 이동과 관련
+	double mass_; // 무게
+	double gravityAcc_; // 중력가속도
+	bool isHoldItem_; // 아이템을 들고 있는가 들고 있다면 머리 위에 아이템 표시
+	bool isJump_; // 공중에 있는가
+	std::string ownItem_; // 가지고 있는 아이템 종류, 임시로 스트링으로 선언 다른 걸로 바꿀 것임
+
 public:
 	Player();
 	~Player();
@@ -13,6 +39,9 @@ public:
 	virtual void move_right(double timestep_s);
 	virtual void move_jump(double timestep_s);
 
+	double posX() { return dest_rect_player_.x; }
+	double posY() { return dest_rect_player_.y; }
+	
 	//점프 - 플레이어 이동에서 핵심
 	virtual void jump();
 
@@ -28,29 +57,5 @@ public:
 
 	virtual void draw_player();
 
-private:
-	//플레이어 그리기에 필요한 기본 요소
-	SDL_Texture* texture_player_;
-	SDL_Rect source_rect_player_;
-	SDL_Rect dest_rect_player_;
 
-	//필요할지도 몰라서 넣는 머리 위의 아이템 표시
-	SDL_Texture* texture_myItem_;
-	SDL_Rect source_rects_myItem_; // 아이템코드에 따라 배열의 요소에 접근 다르게 그리기?
-	SDL_Rect dest_rect_myItem_;
-	
-	// SFX 예상 되는 거 작성한 것
-	Mix_Chunk* jump_sound_;
-	Mix_Chunk* move_sound_;
-	Mix_Chunk* get_item_sound_;
-	Mix_Chunk* give_item_sound_;
-
-	//필요할 것 같은 변수
-	double verticalSpeed_; //수직 - 점프랑 관련
-	double horizontalSpeed_; //수평 - 좌우 이동과 관련
-	double mass_; // 무게
-	double gravityAcc_; // 중력가속도
-	bool isHoldItem_; // 아이템을 들고 있는가 들고 있다면 머리 위에 아이템 표시
-	bool isJump_; // 공중에 있는가
-	std::string ownItem_; // 가지고 있는 아이템 종류, 임시로 스트링으로 선언 다른 걸로 바꿀 것임
 };
