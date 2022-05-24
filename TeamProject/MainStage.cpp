@@ -75,6 +75,10 @@ MainStage::MainStage()
 	game_time = 360; //360초
 	time_ms=0; 
 	time_sec=0;
+	// 연료 게이지 관련 변수
+	fuel_amount=200; 
+	fuel_num=200; 
+	fuel_time=0; 
 
 	Left = false;
 	Right = false;
@@ -221,7 +225,7 @@ void MainStage::HandleEvents()
 			break;
 		}
 	}
-	{// 시간
+	{   // 시간
 		static Uint32 last_ticks = SDL_GetTicks();
 		Uint32 current_ticks = SDL_GetTicks();
 		time_ms += current_ticks - last_ticks;
@@ -229,9 +233,20 @@ void MainStage::HandleEvents()
 		UpdateTimeTexture(time_sec);	
 		last_ticks = time_ms;
 		//연료통
-		status_source_rect.w -= 0.2;
-		status_destination_rect.w -= 0.2;
+		Uint32 fuel_cur_time = SDL_GetTicks();
+		static Uint32 fuel_last_time = SDL_GetTicks();
+		fuel_time+= fuel_cur_time - fuel_last_time;
+		fuel_amount = fuel_num - (fuel_time / 1000);
+		fuel_last_time = fuel_time;
+		status_source_rect.w = fuel_amount;
+		status_destination_rect.w = fuel_amount;
+		if (fuel_amount >= 200) {
+			fuel_amount = 200;
+		}
 	}
+	/*if (연료를 가져다 놨을 시) {
+		fuel_num += 10;
+	}*/
 }
 
 /////////////////////////////////////////////////////////////

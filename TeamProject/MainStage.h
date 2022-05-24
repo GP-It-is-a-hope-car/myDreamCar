@@ -51,6 +51,9 @@ private:
 	int time_ms; 
 	int time_sec;
 	int game_time;
+	int fuel_amount; // 연료통 총량 : 200
+	int fuel_num; // 연료량 증가시키기 위한 변수
+	int fuel_time; // 연료통 감소 시간 받는 변수
 
 	// 흘러간 시간 기록
 	double g_elapsed_time_ms;
