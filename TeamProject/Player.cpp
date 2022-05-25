@@ -29,6 +29,7 @@ Player::~Player()
 {
 	//사용한 자원들 반환
 	SDL_DestroyTexture(texture_player_);
+	delete ownItem_;
 
 }
 
@@ -145,7 +146,6 @@ void Player::move_left(double timestep_s)
 
 	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
-	std::cout << dest_rect_player_.x << std::endl;
 }
 
 void Player::move_right(double timestep_s)
@@ -157,7 +157,6 @@ void Player::move_right(double timestep_s)
 
 	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
-	std::cout << dest_rect_player_.x << std::endl;
 }
 
 void Player::move_jump(double timestep_s)
