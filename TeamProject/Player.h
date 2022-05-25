@@ -48,7 +48,7 @@ public:
 	virtual void jump();
 
 	//아이템 획득과 반환
-	virtual void getItem(ItemInterface * in);
+	virtual bool getItem(ItemInterface* in);
 	ItemInterface * giveItem(); // 주는 거라 반환값이 있어야 할 것 같은데 데이터타입을 몰라서 일단 보류
 
 	//플레이어의 충돌을 테스트하기 위한 함수

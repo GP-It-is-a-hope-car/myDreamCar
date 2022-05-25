@@ -56,7 +56,7 @@ MainStage::MainStage()
 
 	for (int i = 1; i <= 5; i++) // 플랫폼 위치 for문으로 선언해주고 arr에 넣어주자!
 	{
-		Platform* pf = new Platform(50 * i, 100 * i);
+		Platform* pf = new Platform(50 * i, 90 * i);
 		platform_arr.push_back(pf);
 	}
 	// Clear the console screen.
@@ -123,22 +123,8 @@ void MainStage::Update() {
 		}
 	}
 
-	{	//아이템 먹음
-		ItemInterface* item = DistinctItem();
-
-		if (item != nullptr)
-		{
-			if (item->getItemType() == FUEL)
-			{
-				cout << "GET FUEL!!";
-			}
-			else
-			{
-				cout << "GET IRON!!";
-			}
-		}
-	}
-
+	//아이템 먹음
+	DistinctItem();
 
 	g_elapsed_time_ms += 33;
 	if (time_sec < 0) {
@@ -227,8 +213,20 @@ void MainStage::HandleEvents()
 		case SDL_MOUSEBUTTONDOWN:
 
 			// If the mouse left button is pressed. 
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
+			if (event.button.button == SDL_BUTTON_LEFT){
+
+				ItemInterface* return_item = p->giveItem();
+
+				if (return_item == nullptr) return;
+
+				if (return_item->getItemType() == FUEL)
+				{
+					cout << "RETURN FUEL!!\n";
+				}
+				else
+				{
+					cout << "RETURN IRON!!\n";
+				}
 				/*if (!g_stage_flag_running)
 				{
 					g_current_game_phase = PHASE_ENDING;
@@ -381,7 +379,7 @@ int MainStage::Random(int n) // 0에서 n - 1까지 랜덤 수 발생
 
 	return a;
 }
-ItemInterface* MainStage::DistinctItem()
+void MainStage::DistinctItem()
 {
 	int player_x = p->posX() + p->width() / 2;
 	int player_y = p->posY() + p->height() / 2;
@@ -394,11 +392,20 @@ ItemInterface* MainStage::DistinctItem()
 			player_y < item_rect.y + item_rect.h)
 		{
 			ItemInterface* item = item_arr[i];
-			item_arr.erase(item_arr.begin() + i);
-			return item;
+			if (p->getItem(item)) // 먹는데 성공했다면
+			{
+				if (item->getItemType() == FUEL)
+				{
+					cout << "GET FUEL!!\n";
+				}
+				else
+				{
+					cout << "GET IRON!!\n";
+				}
+				item_arr.erase(item_arr.begin() + i); // 지운다.
+			}
 		}
 	}
-	return nullptr;
 }
 void MainStage::DrawGameText()
 {

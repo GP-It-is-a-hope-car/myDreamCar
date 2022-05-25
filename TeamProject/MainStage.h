@@ -81,7 +81,7 @@ public:
 	//void SnakeMove();
 	//void MakeSnake();
 	ItemInterface* CreateItem(int windowX, int windowY);
-	ItemInterface* DistinctItem();
+	void DistinctItem();
 	int Random(int n);
 	//void CreateApple();
 	pair<int, int> CreateRandomPosition();

@@ -99,7 +99,7 @@ bool Player::testOnTruck(double tr_posX, double tr_posY, double tr_width, double
 	return false;
 }
 
-void Player::getItem(ItemInterface * in)
+bool Player::getItem(ItemInterface* in)
 {
 	//∞ÀªÁ∞·∞˙ ∞„ƒ°∏È æ∆¿Ã≈€¿ª »πµÊ
 	//isHoldItem = true
@@ -109,7 +109,9 @@ void Player::getItem(ItemInterface * in)
 	{
 		ownItem_ = in;
 		isHoldItem_ = true;
+		return true;
 	}
+	return false;
 }
 
 ItemInterface * Player::giveItem()
@@ -128,6 +130,7 @@ ItemInterface * Player::giveItem()
 		isHoldItem_ = false;
 		return tmp_own;
 	}
+	return nullptr;
 }
 
 void Player::move_left(double timestep_s)
