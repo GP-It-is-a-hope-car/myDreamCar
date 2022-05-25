@@ -28,7 +28,7 @@ private:
 	double gravityAcc_; // 중력가속도
 	bool isHoldItem_; // 아이템을 들고 있는가 들고 있다면 머리 위에 아이템 표시
 	bool isJump_; // 공중에 있는가
-	std::string ownItem_; // 가지고 있는 아이템 종류, 임시로 스트링으로 선언 다른 걸로 바꿀 것임
+	ItemInterface * ownItem_;
 
 public:
 	Player();
@@ -48,8 +48,8 @@ public:
 	virtual void jump();
 
 	//아이템 획득과 반환
-	virtual void getItem();
-	virtual void giveItem(); // 주는 거라 반환값이 있어야 할 것 같은데 데이터타입을 몰라서 일단 보류
+	virtual void getItem(ItemInterface * in);
+	ItemInterface * giveItem(); // 주는 거라 반환값이 있어야 할 것 같은데 데이터타입을 몰라서 일단 보류
 
 	//플레이어의 충돌을 테스트하기 위한 함수
 	//발판, 아이템, 트럭의 데스티네이션 렉트를 받아와야 하면 매개변수 추가

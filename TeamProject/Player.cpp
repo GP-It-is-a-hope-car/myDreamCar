@@ -39,8 +39,8 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 	if (dest_rect_player_.x + dest_rect_player_.w * 0.95 > pf_posX &&
 		dest_rect_player_.x + dest_rect_player_.w * 0.05 < pf_posX + pf_width)
 	{
-		if (dest_rect_player_.y + dest_rect_player_.h == pf_posY ||
-			dest_rect_player_.y + dest_rect_player_.h > pf_posY + pf_height)
+		if (dest_rect_player_.y + dest_rect_player_.h >= pf_posY &&
+			dest_rect_player_.y + dest_rect_player_.h < pf_posY + pf_height*0.5)
 		{
 			if (verticalSpeed_ > 0)
 			{
@@ -99,15 +99,20 @@ bool Player::testOnTruck(double tr_posX, double tr_posY, double tr_width, double
 	return false;
 }
 
-void Player::getItem()
+void Player::getItem(ItemInterface * in)
 {
 	//검사결과 겹치면 아이템을 획득
 	//isHoldItem = true
 	//ownItem = 들고 있는 아이템 종류
 	//이걸 위해서 아이템 클래스를 받아오거나 해야할 것 같음 
+	if (!isHoldItem_ && ownItem_ == nullptr)
+	{
+		ownItem_ = in;
+		isHoldItem_ = true;
+	}
 }
 
-void Player::giveItem()
+ItemInterface * Player::giveItem()
 {
 	//isHoldItem == true
 	//검사결과 겹치면 트럭에 아이템에 전달 -> 반환값이 있다면 데이터타입은?
@@ -115,6 +120,14 @@ void Player::giveItem()
 	//isHoldItem = false
 	//ownItem = null
 	//아이템 클래스를 반환하거나 뭔가 동작이 필요
+	if (isHoldItem_)
+	{
+		ItemInterface* tmp_own;
+		tmp_own = ownItem_;
+		ownItem_ = nullptr;
+		isHoldItem_ = false;
+		return tmp_own;
+	}
 }
 
 void Player::move_left(double timestep_s)

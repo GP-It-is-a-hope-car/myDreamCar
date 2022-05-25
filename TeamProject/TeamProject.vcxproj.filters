@@ -42,14 +42,14 @@
     <ClInclude Include="Iron.h">
       <Filter>헤더 파일\GameObect</Filter>
     </ClInclude>
-    <ClInclude Include="MainStage.h">
-      <Filter>헤더 파일\Phase</Filter>
-    </ClInclude>
     <ClInclude Include="Intro.h">
       <Filter>헤더 파일\Phase</Filter>
     </ClInclude>
     <ClInclude Include="Ending.h">
       <Filter>헤더 파일\Phase</Filter>
+    </ClInclude>
+    <ClInclude Include="MainStage.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
