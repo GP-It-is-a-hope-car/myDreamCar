@@ -189,7 +189,7 @@ void Player::move_left(double timestep_s)
 	//이동속도는 적당한 것 찾을 예정
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 320;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
 	if (dest_rect_player_.x<=256&&range!=2) {
 		dest_rect_player_.x = 256;
@@ -206,7 +206,7 @@ void Player::move_right(double timestep_s)
 	//오른쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 320;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
 	if (range!=1&&dest_rect_player_.x >=288) {
 		dest_rect_player_.x = 288;

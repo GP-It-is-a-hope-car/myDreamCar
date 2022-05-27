@@ -26,6 +26,7 @@ const int PLATFORM = 2;
 const int FUEL = 3;
 const int IRON = 4;
 
+const float ITEMTIME = 5.0f;
 extern int g_current_game_phase;
 extern bool g_flag_running;
 extern SDL_Window* g_window;

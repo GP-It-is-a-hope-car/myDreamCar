@@ -58,9 +58,9 @@ private:
 	// 흘러간 시간 기록
 	double g_elapsed_time_ms;
 
+	float truck_time = 0.0f;
 
-	int tile_speed; // 타일 스피드
-	
+	int tile_speed; // 타일 스피드	
 	int increase; // 타일을 이동시키는 변수
 
 public:

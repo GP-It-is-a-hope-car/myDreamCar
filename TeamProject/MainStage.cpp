@@ -25,7 +25,6 @@ enum Key
 	DOWN
 };
 
-
 bool Left;
 bool Right;
 bool Jump;
@@ -36,6 +35,7 @@ typedef struct Tile {
 	int tile_posy;
 	int row;
 	int col;
+	float time = 0.0f;
 	int state;
 };
 Tile tile[map_w][map_h];
@@ -120,7 +120,7 @@ MainStage::MainStage()
 	Left = false;
 	Right = false;
 	Jump = false;
-	tile_speed =160*g_timestep_s;
+	tile_speed =320*g_timestep_s;
 }
 
 /////////////////////////////////////////////////////////////
@@ -130,12 +130,24 @@ MainStage::MainStage()
 // °ÔÀÓ¿¡¼­ ÀÏ¾î³ª´Â º¯È­´Â ¸ğµÎ ÀÌ °÷¿¡¼­ ±¸ÇöÇÑ´Ù.
 // main ÇÔ¼öÀÇ while loop¿¡ ÀÇÇØ¼­ ¹«ÇÑÈ÷ ¹İº¹ È£ÃâµÈ´Ù´Â °ÍÀ» ÁÖÀÇ.
 void MainStage::Update() {
+
+	//Æ®·°ÀÌ ¿òÁ÷ÀÌ´Â ¼Óµµ
+	truck_time += 1 / 30.0f;
+
+	if (truck_time >= 1.0f) {
+		g_truck->getDstRect()->x += 10;
+		truck_time = 0.0f;
+	}
+	
 	if (Left)
 	{
 		p->move_left(g_timestep_s);
+
 		if (bg_source.x > 0) {
 			increase--;
 			bg_source.x -= tile_speed;
+			g_truck->getDstRect()->x += tile_speed;
+			
 		}
 	}
 	if (Right)
@@ -144,28 +156,35 @@ void MainStage::Update() {
 		if (bg_source.x < 1280) {
 			increase++;
 			bg_source.x += tile_speed;
+			g_truck->getDstRect()->x -= tile_speed;
 		}
 	}
 	p->move_jump(g_timestep_s);
-	//p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
 
-	// ¹Ù´Ú Ãæµ¹ ÆÇÁ¤ + ÇÃ·§Æû Ãæµ¹ ÆÇÁ¤
+	// ¹Ù´Ú Ãæµ¹ ÆÇÁ¤ + ÇÃ·§Æû Ãæµ¹ ÆÇÁ¤ + ÀÏÁ¤ ½Ã°£ °æ°ú ½Ã ¾ÆÀÌÅÛ »èÁ¦
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
 			if (tile[i][j].state == GROUND || tile[i][j].state == PLATFORM)
 			{
 				p->testOnPlatform(tile_destination[i][j].x, tile_destination[i][j].y, tile_destination[i][j].w, tile_destination[i][j].h);
 			}
-				
+			if (tile[i][j].state == FUEL || tile[i][j].state == IRON)
+			{
+				tile[i][j].time += 1 / 30.0f;
+				if (tile[i][j].time >= ITEMTIME)
+				{
+					tile[i][j].time = 0.0f;
+					tile[i][j].state = EMPTY;
+				}
+			}
 		}
 	}
 
 	{	// ¾ÆÀÌÅÛ ·£´ı »ı¼º ÆÄÆ®
 		itemTime += 1 / 30.0f;
-		if (itemTime >= 5)
+		if (itemTime >= ITEMTIME) // ¾ÆÀÌÅÛ »ı¼º ÁÖ±â
 		{
 			itemTime = 0;
-			//ÇÃ·¹ÀÌ¾î ÁÖº¯ 700, 700À» Å½»ö ÈÄ ¹ßÆÇÀÌ Á¸ÀçÇÏ¸é »ı¼ºÇÒ ¾ÆÀÌÅÛ ¹İÈ¯
 			CreateItem();		
 		}
 	}
@@ -185,21 +204,13 @@ void MainStage::Update() {
 // main ÇÔ¼öÀÇ while loop¿¡ ÀÇÇØ¼­ ¹«ÇÑÈ÷ ¹İº¹ È£ÃâµÈ´Ù´Â °ÍÀ» ÁÖÀÇ.
 void MainStage::Render() {
 
-	//SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);
 	//¹è°æÀ» ±×¸²
 	SDL_RenderCopy(g_renderer, bg_texture, &bg_source, &bg_destination);
-	
 
 	//Æ®·°À» ±×¸²
-	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getRect());
+	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getDstRect());
 	//¿¬·á °ÔÀÌÁö¸¦ ±×¸²
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
-
-	/*//item_arrÀÇ ÀÎÀÚµéÀ» ±×¸²(°íÃ¶,¿¬·á)
-	for (int i = 0; i < item_arr.size(); i++)
-	{
-		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
-	}*/
 	
 	for (int k = 0; k < map_w; k++) {
 		for (int h = 0; h < map_h; h++) {
@@ -359,7 +370,6 @@ MainStage::~MainStage()
 
 	delete p;
 	delete ground;
-	//delete pf2;
 
 	//Mix_FreeChunk(g_missile_fire_sound);
 }
@@ -368,6 +378,7 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 {
 	SDL_Rect truck_dst_init = { 0, 500, 160, 80 };
 	g_truck = new Truck(truck_dst_init);
+	truck_time = 0.0f;
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -384,8 +395,9 @@ void MainStage::CreateItem()
 
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
-			if (tile[i][j].state == PLATFORM)
+			if (tile[i][j].state == PLATFORM) //&& tile[i][j - 1].state == EMPTY)
 			{
+				tile[i][j].time = 0.0f;
 				platform_tile.push_back(tile[i][j]);
 			}
 		}
@@ -438,6 +450,7 @@ void MainStage::DistinctItem()
 							cout << "GET IRON!!\n";
 						}
 						tile[i][j].state = EMPTY;
+						tile[i][j].time = 0.0f;
 					}
 				}
 			}

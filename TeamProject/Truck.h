@@ -20,6 +20,6 @@ public:
 	int getSpeed() { return speed; }
 	int getGauge() { return gauge; }
 	int getIronCnt() { return ironCnt; }
-	SDL_Rect* getRect() { return &dest_rect_truck_; }
+	SDL_Rect* getDstRect() { return &dest_rect_truck_; }
 	
 };
