@@ -1,5 +1,6 @@
 #include "Player.h"
 
+extern int range;
 Player::Player()
 {
 	//플레이어 텍스처, 렉트, SFX등 초기화
@@ -9,7 +10,7 @@ Player::Player()
 
 	SDL_QueryTexture(texture_player_, NULL, NULL, &source_rect_player_.w, &source_rect_player_.h);
 	source_rect_player_.x = source_rect_player_.y = 0;
-	dest_rect_player_.x = dest_rect_player_.y = 20;
+	dest_rect_player_.x = dest_rect_player_.y = 288;
 	dest_rect_player_.w = source_rect_player_.w;
 	dest_rect_player_.h = source_rect_player_.h;
 
@@ -143,9 +144,14 @@ void Player::move_left(double timestep_s)
 	//이동속도는 적당한 것 찾을 예정
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
-
 	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
+	if (dest_rect_player_.x<=256&&range!=2) {
+		dest_rect_player_.x = 256;
+	}
+	else if (dest_rect_player_.x <= 256 && range == 2) {
+		dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
+	}
 }
 
 void Player::move_right(double timestep_s)
@@ -157,6 +163,12 @@ void Player::move_right(double timestep_s)
 
 	horizontalSpeed_ = 160;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
+	if (range!=1&&dest_rect_player_.x >=288) {
+		dest_rect_player_.x = 288;
+	}
+	else if (range == 1 && dest_rect_player_.x >=288) {
+		dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
+	}
 }
 
 void Player::move_jump(double timestep_s)

@@ -9,7 +9,7 @@
 #define CELL 50
 
 using namespace std;
-
+int range;
 Player* p;
 Platform* ground;
 vector<Platform*> platform_arr;
@@ -102,7 +102,7 @@ MainStage::MainStage()
 		}
 	}
 	increase = 0;
-
+	range = 0;
 	// 연료 게이지 관련 변수
 	fuel_amount = 200;
 	fuel_num = 200;
@@ -326,6 +326,16 @@ void MainStage::HandleEvents()
 	/*if (연료를 가져다 놨을 시) {
 		fuel_num += 10;
 	}*/
+
+	if (bg_source.x>=1279) {
+		range = 1;
+	}
+	else if (bg_source.x <= 0) {
+		range = 2;
+	}
+	else {
+		range = 3;
+	}
 }
 
 /////////////////////////////////////////////////////////////
@@ -386,7 +396,7 @@ ItemInterface* MainStage::CreateItem(int windowX, int windowY)
 	int left_up_x = p->posX() - windowX / 2, left_up_y = p->posY() - windowY / 2;
 	int right_down_x = p->posX() + windowX / 2, right_down_y = p->posY() + windowY / 2;
 
-	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() << increase<<"\n";
+	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() <<"\n";
 	cout << "left_up_x: " << left_up_x << " left_up_y: " << left_up_y << "\n";
 	cout << "right_down_x: " << right_down_x << " right_down_y: " << right_down_y << "\n";
 

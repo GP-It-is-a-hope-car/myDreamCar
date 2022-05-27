@@ -73,7 +73,6 @@ private:
 	
 	int increase; // 타일을 이동시키는 변수
 
-
 public:
 	MainStage();
 	virtual ~MainStage();
