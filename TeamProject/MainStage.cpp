@@ -47,7 +47,7 @@ MainStage::MainStage()
 
 	InitTexts();
 	//¹è°æ
-	SDL_Surface* bg_surface= IMG_Load("../../Resources/dummy_bg.png");
+	SDL_Surface* bg_surface= IMG_Load("../../Resources/bg_2.png");
 	bg_texture= SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 	bg_source= { 0,0,640,640 };
@@ -145,7 +145,7 @@ void MainStage::Update() {
 
 		if (p->posX()==256) {
 			increase--;
-			bg_source.x -= tile_speed;
+			bg_source.x -= tile_speed/2;
 			g_truck->getDstRect()->x += tile_speed;
 		}
 		else if (p->posX() != 256) {
@@ -158,7 +158,7 @@ void MainStage::Update() {
 		p->move_right(g_timestep_s);
 		if (p->posX()==288) {
 			increase++;
-			bg_source.x += tile_speed;
+			bg_source.x += tile_speed/2;
 			g_truck->getDstRect()->x -= tile_speed;
 		}
 		else if (p->posX() != 288) {
@@ -347,7 +347,7 @@ void MainStage::HandleEvents()
 		fuel_num += 10;
 	}*/
 
-	if (bg_source.x==1200) {
+	if (bg_source.x==320) {
 		range = 1;
 	}
 	else if (bg_source.x == 0) {

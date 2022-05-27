@@ -51,6 +51,12 @@
     <ClInclude Include="MainStage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Story.h">
+      <Filter>헤더 파일\Phase</Filter>
+    </ClInclude>
+    <ClInclude Include="Explain.h">
+      <Filter>헤더 파일\Phase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameFunc.cpp">
@@ -84,6 +90,12 @@
       <Filter>소스 파일\Phase</Filter>
     </ClCompile>
     <ClCompile Include="Ending.cpp">
+      <Filter>소스 파일\Phase</Filter>
+    </ClCompile>
+    <ClCompile Include="Story.cpp">
+      <Filter>소스 파일\Phase</Filter>
+    </ClCompile>
+    <ClCompile Include="Explain.cpp">
       <Filter>소스 파일\Phase</Filter>
     </ClCompile>
   </ItemGroup>
