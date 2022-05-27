@@ -12,7 +12,10 @@ using namespace std;
 int range;
 Player* p;
 Platform* ground;
-vector<Platform*> platform_arr;
+Platform* pf;
+ItemInterface* fuel;
+ItemInterface* iron;
+
 
 enum Key
 {
@@ -21,20 +24,22 @@ enum Key
 	UP,
 	DOWN
 };
-vector<Platform*> platform_tmp;
+
 
 bool Left;
 bool Right;
 bool Jump;
 
 // Å¸ÀÏ ±¸Á¶Ã¼ ¼±¾ð
-typedef struct t {
+typedef struct Tile {
 	int tile_posx;
 	int tile_posy;
+	int row;
+	int col;
 	int state;
 };
-t tile[map_w][map_h];
-
+Tile tile[map_w][map_h];
+vector<Tile> platform_tile;
 // Init() ´ë½Å »ý¼ºÀÚ¸¦ »ç¿ëÇÔ
 MainStage::MainStage()
 {
@@ -63,12 +68,9 @@ MainStage::MainStage()
 
 	p = new Player;
 	ground = new Platform;
-
-	for (int i = 1; i <= 6; i++) // ÇÃ·§Æû À§Ä¡ for¹®À¸·Î ¼±¾ðÇØÁÖ°í arr¿¡ ³Ö¾îÁÖÀÚ!
-	{
-		Platform* pf = new Platform(50 * i, 90 * i);
-		platform_arr.push_back(pf);
-	}
+	pf = new Platform(0, 0);
+	fuel = new Fuel({ 0,0,0,0 });
+	iron = new Iron({ 0,0,0,0 });
 	// Clear the console screen.
 	// Ç¥ÁØÃâ·Â È­¸éÀ» ±ú²ýÈ÷ Áö¿î´Ù.
 	//system("cls");
@@ -86,15 +88,22 @@ MainStage::MainStage()
 		for (int j = 0; j < map_h; j++) {
 			tile_destination[i][j].w = 64;
 			tile_destination[i][j].h = 64;
-			tile[i][j].state = 0;
+			tile[i][j].row = i;
+			tile[i][j].col = j;
+			tile[i][j].state = EMPTY;
 		}
 	}
 	for (int k = 0; k < map_w; k++) {
-		tile[k][9].state = 1;
+		tile[k][9].state = GROUND;
 	}
+	for (int i = 5; i < 8; i++) {
+		tile[i][7].state = PLATFORM;
+	}
+
 	for (int i = 10; i < 13; i++) {
-		tile[i][5].state = 1;
+		tile[i][7].state = PLATFORM;
 	}
+	
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
 			tile[i][j].tile_posx = i * 20;
@@ -140,20 +149,15 @@ void MainStage::Update() {
 	p->move_jump(g_timestep_s);
 	//p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
 
-	// ¹Ù´Ú Ãæµ¹ ÆÇÁ¤
+	// ¹Ù´Ú Ãæµ¹ ÆÇÁ¤ + ÇÃ·§Æû Ãæµ¹ ÆÇÁ¤
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
-			if (tile[i][j].state == 1)
+			if (tile[i][j].state == GROUND || tile[i][j].state == PLATFORM)
 			{
 				p->testOnPlatform(tile_destination[i][j].x, tile_destination[i][j].y, tile_destination[i][j].w, tile_destination[i][j].h);
 			}
 				
 		}
-	}
-	// ÇÃ·§Æû Ãæµ¹ ÆÇÁ¤
-	for (int i = 0; i < platform_arr.size(); i++)
-	{
-		p->testOnPlatform(platform_arr[i]->posX(), platform_arr[i]->posY(), platform_arr[i]->width(), platform_arr[i]->height());
 	}
 
 	{	// ¾ÆÀÌÅÛ ·£´ý »ý¼º ÆÄÆ®
@@ -162,11 +166,7 @@ void MainStage::Update() {
 		{
 			itemTime = 0;
 			//ÇÃ·¹ÀÌ¾î ÁÖº¯ 700, 700À» Å½»ö ÈÄ ¹ßÆÇÀÌ Á¸ÀçÇÏ¸é »ý¼ºÇÒ ¾ÆÀÌÅÛ ¹ÝÈ¯
-			ItemInterface* newItem = CreateItem(700, 700);
-			if (newItem != nullptr)
-			{
-				item_arr.push_back(newItem);
-			}
+			CreateItem();		
 		}
 	}
 
@@ -195,25 +195,26 @@ void MainStage::Render() {
 	//¿¬·á °ÔÀÌÁö¸¦ ±×¸²
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
-	//item_arrÀÇ ÀÎÀÚµéÀ» ±×¸²(°íÃ¶,¿¬·á)
+	/*//item_arrÀÇ ÀÎÀÚµéÀ» ±×¸²(°íÃ¶,¿¬·á)
 	for (int i = 0; i < item_arr.size(); i++)
 	{
 		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
-	}
-
-	//ground->draw_pf();
-
-	//Å¸ÀÏ
-	for (int i = 0; i < platform_arr.size(); i++)
-	{
-		platform_arr[i]->draw_pf();
-	}
+	}*/
 	
 	for (int k = 0; k < map_w; k++) {
 		for (int h = 0; h < map_h; h++) {
 			
-			if (tile[k][h].state == 1) {
+			if (tile[k][h].state == GROUND) {
 				SDL_RenderCopy(g_renderer, tile_texture, &tile_source, &tile_destination[k][h]);
+			}
+			else if (tile[k][h].state == PLATFORM) {
+				SDL_RenderCopy(g_renderer, pf->getTexture(), pf->getSrcRect(), &tile_destination[k][h]);
+			}
+			else if (tile[k][h].state == FUEL) {
+				SDL_RenderCopy(g_renderer, fuel->getTexture(), fuel->getSrcRect(), &tile_destination[k][h]);
+			}
+			else if (tile[k][h].state == IRON) {
+				SDL_RenderCopy(g_renderer, iron->getTexture(), iron->getSrcRect(), &tile_destination[k][h]);
 			}
 		}
 	}
@@ -261,11 +262,11 @@ void MainStage::HandleEvents()
 			// If the mouse left button is pressed. 
 			if (event.button.button == SDL_BUTTON_LEFT){
 
-				ItemInterface* return_item = p->giveItem();
+				int return_item = p->giveItem();
 
-				if (return_item == nullptr) return;
+				if (return_item == -1) return;
 
-				if (return_item->getItemType() == FUEL)
+				if (return_item == FUEL)
 				{
 					cout << "RETURN FUEL!!\n";
 				}
@@ -367,19 +368,6 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 {
 	SDL_Rect truck_dst_init = { 0, 500, 160, 80 };
 	g_truck = new Truck(truck_dst_init);
-
-	/*SDL_Rect fuel_dst_init = {150, 150, 50, 50};
-	ItemInterface *fuel = new Fuel(fuel_dst_init);
-
-	item_arr.push_back(fuel);
-
-	SDL_Rect iron_dst_init = { 350, 350, 50, 50 };
-	ItemInterface *iron = new Iron(iron_dst_init);
-
-	item_arr.push_back(iron);*/
-
-	item_arr.clear();
-	platform_arr.clear();
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -390,48 +378,31 @@ void MainStage::MakeGameObjTextures()
 	SDL_FreeSurface(truck_sheet_surface);
 }
 
-ItemInterface* MainStage::CreateItem(int windowX, int windowY)
+void MainStage::CreateItem()
 {
-	platform_tmp.clear();
+	platform_tile.clear();
 
-	int left_up_x = p->posX() - windowX / 2, left_up_y = p->posY() - windowY / 2;
-	int right_down_x = p->posX() + windowX / 2, right_down_y = p->posY() + windowY / 2;
-
-	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() <<"\n";
-	cout << "left_up_x: " << left_up_x << " left_up_y: " << left_up_y << "\n";
-	cout << "right_down_x: " << right_down_x << " right_down_y: " << right_down_y << "\n";
-
-	for (int i = 0; i < platform_arr.size(); i++)
-	{
-		int platform_x = platform_arr[i]->posX();
-		int platform_y = platform_arr[i]->posY();
-		if (platform_x > left_up_x && platform_y > left_up_y &&
-			platform_x < right_down_x && platform_y < right_down_y)
-		{
-			cout << "¹ß°ß!!" << "\n";
-			platform_tmp.push_back(platform_arr[i]);
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			if (tile[i][j].state == PLATFORM)
+			{
+				platform_tile.push_back(tile[i][j]);
+			}
 		}
 	}
-	if (platform_tmp.empty()) return nullptr;
 
-	int selected_platform_idx = Random(platform_tmp.size());
-	SDL_Rect rect = platform_tmp[selected_platform_idx]->getRect();
-	cout << "rect.x: " << rect.x << " rect.y: " << rect.y << "\n";
-
-	rect.w = 50; rect.h = 50;
-	int addX = Random(rect.w);
-	rect.x += addX; rect.y -= 50;
-	ItemInterface* item;
-
-	if (Random(2) % 2 == FUEL)
+	int selected_platform_idx = Random(platform_tile.size());
+	int x = platform_tile[selected_platform_idx].row;
+	int y = platform_tile[selected_platform_idx].col - 1;
+	
+	if (Random(2) % 2 == 0)
 	{
-		item = new Fuel(rect);
+		tile[x][y].state = FUEL;
 	}
 	else
 	{
-		item = new Iron(rect);
+		tile[x][y].state = IRON;
 	}
-	return item;
 }
 int MainStage::Random(int n) // 0¿¡¼­ n - 1±îÁö ·£´ý ¼ö ¹ß»ý
 {
@@ -446,26 +417,29 @@ void MainStage::DistinctItem()
 {
 	int player_x = p->posX() + p->width() / 2;
 	int player_y = p->posY() + p->height() / 2;
-	for (int i = 0; i < item_arr.size(); i++)
-	{
-		SDL_Rect item_rect = *item_arr[i]->getDstRect();
 
-		if (player_x > item_rect.x && player_y > item_rect.y &&
-			player_x < item_rect.x + item_rect.w &&
-			player_y < item_rect.y + item_rect.h)
-		{
-			ItemInterface* item = item_arr[i];
-			if (p->getItem(item)) // ¸Ô´Âµ¥ ¼º°øÇß´Ù¸é
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			if (tile[i][j].state == FUEL || tile[i][j].state == IRON)
 			{
-				if (item->getItemType() == FUEL)
+				SDL_Rect item_rect = tile_destination[i][j];
+				if (player_x > item_rect.x && player_y > item_rect.y &&
+					player_x < item_rect.x + item_rect.w &&
+					player_y < item_rect.y + item_rect.h)
 				{
-					cout << "GET FUEL!!\n";
+					if (p->getItem(tile[i][j].state)) // ¸Ô´Âµ¥ ¼º°øÇß´Ù¸é
+					{
+						if (tile[i][j].state == FUEL)
+						{
+							cout << "GET FUEL!!\n";						
+						}
+						else
+						{
+							cout << "GET IRON!!\n";
+						}
+						tile[i][j].state = EMPTY;
+					}
 				}
-				else
-				{
-					cout << "GET IRON!!\n";
-				}
-				item_arr.erase(item_arr.begin() + i); // Áö¿î´Ù.
 			}
 		}
 	}

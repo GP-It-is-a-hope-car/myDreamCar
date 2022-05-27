@@ -20,8 +20,11 @@ const int PHASE_INTRO = 0;
 const int PHASE_MAINSTAGE = 1;
 const int PHASE_ENDING = 2;
 
-const int FUEL = 0;
-const int IRON = 1;
+const int EMPTY = 0;
+const int GROUND = 1;
+const int PLATFORM = 2;
+const int FUEL = 3;
+const int IRON = 4;
 
 extern int g_current_game_phase;
 extern bool g_flag_running;

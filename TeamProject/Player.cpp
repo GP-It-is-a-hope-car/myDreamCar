@@ -47,6 +47,7 @@ Player::Player()
 	gravityAcc_ = 1960;
 	isHoldItem_ = false;
 	isJump_ = false;
+	ownItem_ = -1;
 }
 
 Player::~Player()
@@ -55,7 +56,7 @@ Player::~Player()
 	SDL_DestroyTexture(texture_player_);
 	SDL_DestroyTexture(texture_fuel_);
 	SDL_DestroyTexture(texture_iron_);
-	delete ownItem_;
+	//delete ownItem_;
 
 }
 
@@ -126,13 +127,13 @@ bool Player::testOnTruck(double tr_posX, double tr_posY, double tr_width, double
 	return false;
 }
 
-bool Player::getItem(ItemInterface* in)
+bool Player::getItem(int in)
 {
 	//검사결과 겹치면 아이템을 획득
 	//isHoldItem = true
 	//ownItem = 들고 있는 아이템 종류
 	//이걸 위해서 아이템 클래스를 받아오거나 해야할 것 같음 
-	if (!isHoldItem_ && ownItem_ == nullptr)
+	if (!isHoldItem_ && ownItem_ == -1)
 	{
 		ownItem_ = in;
 		isHoldItem_ = true;
@@ -145,13 +146,13 @@ void Player::showItem()
 {
 	if (isHoldItem_)
 	{
-		if (ownItem_->getItemType() == FUEL)
+		if (ownItem_ == FUEL)
 		{
 			dest_rect_fuel_.x = dest_rect_player_.x + 16;
 			dest_rect_fuel_.y = dest_rect_player_.y - 48;
 			SDL_RenderCopy(g_renderer, texture_fuel_, &source_rect_fuel_, &dest_rect_fuel_);
 		}
-		else if (ownItem_->getItemType() == IRON)
+		else if (ownItem_ == IRON)
 		{
 			dest_rect_iron_.x = dest_rect_player_.x + 16;
 			dest_rect_iron_.y = dest_rect_player_.y - 48;
@@ -160,7 +161,7 @@ void Player::showItem()
 	}
 }
 
-ItemInterface * Player::giveItem()
+int Player::giveItem()
 {
 	//isHoldItem == true
 	//검사결과 겹치면 트럭에 아이템에 전달 -> 반환값이 있다면 데이터타입은?
@@ -170,13 +171,13 @@ ItemInterface * Player::giveItem()
 	//아이템 클래스를 반환하거나 뭔가 동작이 필요
 	if (isHoldItem_)
 	{
-		ItemInterface* tmp_own;
+		int tmp_own;
 		tmp_own = ownItem_;
-		ownItem_ = nullptr;
+		ownItem_ = -1;
 		isHoldItem_ = false;
 		return tmp_own;
 	}
-	return nullptr;
+	return -1; // 아무것도 안들고 있다면 -1 반환
 }
 
 void Player::move_left(double timestep_s)

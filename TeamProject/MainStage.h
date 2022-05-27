@@ -29,13 +29,6 @@ private:
 
 	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
-	//SDL_Rect g_destination_apple;
-
-
-	//SDL_Rect g_destination_apple;
-
-
-	//SDL_Rect g_destination_apple;
 
 	TTF_Font* g_font_gameover; // 게임 폰트 선언
 	SDL_Texture* g_gameover_text_kr;
@@ -48,10 +41,7 @@ private:
 	SDL_Rect status_destination_rect;
 
 	Truck* g_truck;
-	vector<ItemInterface*> item_arr;
-	/*ItemInterface* g_fuel;
-	ItemInterface* g_iron;*/
-
+	
 	bool visited[13][13];
 	int g_cur_key;
 	int g_stage_last_time_ms;
@@ -82,19 +72,14 @@ public:
 	virtual void Render() override;
 
 	void InitGameObjectState();
-	//void CheckIsSnakeBody();
 	void DrawGameText();
 	void DrawGameOverText();
 	void InitChunk();
 	void InitTexts();
 	void UpdateTimeTexture(int ms);
 	void MakeGameObjTextures();
-	//bool GetApple();
-	//void SnakeMove();
-	//void MakeSnake();
-	ItemInterface* CreateItem(int windowX, int windowY);
+	void CreateItem();
 	void DistinctItem();
 	int Random(int n);
-	//void CreateApple();
 	pair<int, int> CreateRandomPosition();
 };
