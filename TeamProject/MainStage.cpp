@@ -220,6 +220,7 @@ void MainStage::Render() {
 
 	//플레이어
 	p->draw_player();
+	p->showItem();
 
 	/*if (!g_stage_flag_running)
 		DrawGameOverText();*/
