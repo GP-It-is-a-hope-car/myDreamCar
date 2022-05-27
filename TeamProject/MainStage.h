@@ -7,15 +7,25 @@
 #include "Fuel.h"
 #include "Iron.h"
 #include<list>
+#define map_w 30 // 맵 크기 : 가로
+#define map_h 10 // 맵 크기 : 세로
+#define win_w 30 // 윈도우 크기 : 가로
+#define win_h 10 // 윈도우 크기 : 세로
 
 using namespace std;
 
 class MainStage : public PhaseInterface
 {
 private:
-	SDL_Rect g_bg_1_source_rect; // 배경
-	SDL_Rect g_bg_2_source_rect;
 
+	//배경
+	SDL_Texture* bg_texture;
+	SDL_Rect bg_destination; 
+	SDL_Rect bg_source;
+	//타일
+	SDL_Texture* tile_texture;
+	SDL_Rect tile_source;
+	SDL_Rect tile_destination[win_w][win_h];
 
 	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
@@ -32,9 +42,6 @@ private:
 	SDL_Rect g_gameover_text_kr_rect;
 	SDL_Color white = { 255, 255, 255, 0 }; // 색깔 선언
 	SDL_Color black = { 0, 0, 0, 0 }; // 색깔 선언
-
-	SDL_Texture* text_time; // 남은 시간 선언
-	SDL_Rect text_time_rect;
 
 	SDL_Texture* fuel_status;
 	SDL_Rect status_source_rect;
@@ -60,6 +67,12 @@ private:
 	float itemTime = 0;
 	// 흘러간 시간 기록
 	double g_elapsed_time_ms;
+
+
+	int tile_speed; // 타일 스피드
+	
+	int increase; // 타일을 이동시키는 변수
+
 
 public:
 	MainStage();

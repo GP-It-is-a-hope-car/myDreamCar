@@ -7,6 +7,7 @@
 
 #define SIZE 8
 #define CELL 50
+
 using namespace std;
 
 Player* p;
@@ -26,22 +27,31 @@ bool Left;
 bool Right;
 bool Jump;
 
+// 타일 구조체 선언
+typedef struct t {
+	int tile_posx;
+	int tile_posy;
+	int state;
+};
+t tile[map_w][map_h];
+
 // Init() 대신 생성자를 사용함
 MainStage::MainStage()
 {
 	MakeGameObjTextures();
 
 	InitTexts();
-
-	g_bg_1_source_rect.x = 0;
-	g_bg_1_source_rect.y = 0;
-	g_bg_1_source_rect.w = 700;
-	g_bg_1_source_rect.h = 700;
-
-	g_bg_2_source_rect.x = 50;
-	g_bg_2_source_rect.y = 50;
-	g_bg_2_source_rect.w = 600;
-	g_bg_2_source_rect.h = 600;
+	//배경
+	SDL_Surface* bg_surface= IMG_Load("../../Resources/dummy_bg.png");
+	bg_texture= SDL_CreateTextureFromSurface(g_renderer, bg_surface);
+	SDL_FreeSurface(bg_surface);
+	bg_source= { 0,0,640,640 };
+	bg_destination = { 0,0,640,640 };
+	//타일 (바닥)
+	SDL_Surface* tile_surface = IMG_Load("../../Resources/tile_m.png");
+	tile_texture = SDL_CreateTextureFromSurface(g_renderer, tile_surface);
+	SDL_FreeSurface(tile_surface);
+	tile_source = { 0,0,500,300 };
 
 	g_truck_source_rect.x = 0; // 트럭 가져오기
 	g_truck_source_rect.y = 0;
@@ -63,26 +73,43 @@ MainStage::MainStage()
 	// 표준출력 화면을 깨끗히 지운다.
 	//system("cls");
 
-	// 연료통 생성
+	// 연료 게이지 생성
 	SDL_Surface* status_surface = IMG_Load("../../Resources/gauge.png");
 	fuel_status = SDL_CreateTextureFromSurface(g_renderer, status_surface);
 	SDL_FreeSurface(status_surface);
 	status_source_rect = { 0,0,200,100 };
-	status_destination_rect = { 400,600,200,50 };
+	status_destination_rect = { 0,0,200,40 };
 
-	// 시간 관련 변수
-	game_time = 360; //360초
-	time_ms = 0;
-	time_sec = 0;
+
+	//타일 관련
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			tile[i][j].state = 0;
+		}
+	}
+	for (int k = 0; k < map_w; k++) {
+		tile[k][9].state = 1;
+	}
+	for (int i = 10; i < 13; i++) {
+		tile[i][5].state = 1;
+	}
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			tile[i][j].tile_posx = i * 20;
+			tile[i][j].tile_posy = j * 20;
+		}
+	}
+	increase = 0;
 
 	// 연료 게이지 관련 변수
 	fuel_amount = 200;
 	fuel_num = 200;
 	fuel_time = 0;
-
+	
 	Left = false;
 	Right = false;
 	Jump = false;
+	tile_speed =160*g_timestep_s;
 }
 
 /////////////////////////////////////////////////////////////
@@ -95,14 +122,23 @@ void MainStage::Update() {
 	if (Left)
 	{
 		p->move_left(g_timestep_s);
+		if (bg_source.x > 0) {
+			increase--;
+			bg_source.x -= tile_speed;
+		}
 	}
 	if (Right)
 	{
 		p->move_right(g_timestep_s);
+		if (bg_source.x < 1280) {
+			increase++;
+			bg_source.x += tile_speed;
+		}
 	}
 	p->move_jump(g_timestep_s);
 	p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
 
+	
 
 	for (int i = 0; i < platform_arr.size(); i++)
 	{
@@ -138,15 +174,14 @@ void MainStage::Update() {
 // main 함수의 while loop에 의해서 무한히 반복 호출된다는 것을 주의.
 void MainStage::Render() {
 
-	SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);
-	SDL_RenderFillRect(g_renderer, &g_bg_1_source_rect);
-
-	SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 0);
-	SDL_RenderFillRect(g_renderer, &g_bg_2_source_rect);
+	//SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 0);
+	//배경을 그림
+	SDL_RenderCopy(g_renderer, bg_texture, &bg_source, &bg_destination);
+	
 
 	//트럭을 그림
 	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getRect());
-	//
+	//연료 게이지를 그림
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
 	//item_arr의 인자들을 그림(고철,연료)
@@ -155,26 +190,25 @@ void MainStage::Render() {
 		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
 	}
 
-	//플랫폼
 	ground->draw_pf();
+
+	//타일
 	for (int i = 0; i < platform_arr.size(); i++)
 	{
 		platform_arr[i]->draw_pf();
 	}
-
+	for (int k = 0; k < map_w; k++) {
+		for (int h = 0; h < map_h; h++) {
+			tile_destination[k][h].w = 64;
+			tile_destination[k][h].h = 64;
+			if (tile[k][h].state == 1) {
+				SDL_RenderCopy(g_renderer, tile_texture, &tile_source, &tile_destination[k][h]);
+			}
+		}
+	}
 
 	//플레이어
 	p->draw_player();
-
-	//제한 시간을 그림
-	{
-		SDL_Rect r;
-		r.x = 100;
-		r.y = 50;
-		r.w = text_time_rect.w = 50;
-		r.h = text_time_rect.h = 50;
-		SDL_RenderCopy(g_renderer, text_time, 0, &r);
-	}
 
 	/*if (!g_stage_flag_running)
 		DrawGameOverText();*/
@@ -252,14 +286,20 @@ void MainStage::HandleEvents()
 			break;
 		}
 	}
-	{
-		static Uint32 last_ticks = SDL_GetTicks();
-		Uint32 current_ticks = SDL_GetTicks();
-		time_ms += current_ticks - last_ticks;
-		time_sec = game_time - (time_ms / 1000);
-		UpdateTimeTexture(time_sec);
-		last_ticks = time_ms;
+	{	
+		// 타일 초기화
+		if (increase >= 0) {
+			for (int i = 0; i < map_w; i++) {
+				for (int j = 0; j < map_h; j++) {
+					tile[i][j].tile_posx = i * 64 - increase * tile_speed;
+					tile[i][j].tile_posy = j * 64;
+					tile_destination[i][j].x = tile[i][j].tile_posx;
+					tile_destination[i][j].y = tile[i][j].tile_posy;
 
+				}
+			}
+		}
+		
 		//연료통
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
@@ -289,7 +329,8 @@ MainStage::~MainStage()
 	SDL_DestroyTexture(g_iron_sheet_texture);*/ // 고철 메모리 해제
 	SDL_DestroyTexture(g_gameover_text_kr); // 게임오버 텍스트 메모리 해제
 	SDL_DestroyTexture(fuel_status); // 연료통 메모리 해제
-	SDL_DestroyTexture(text_time); // 제한시간 텍스트 메모리 해제
+	SDL_DestroyTexture(bg_texture); // 배경화면 메모리 해제
+	SDL_DestroyTexture(tile_texture); // 타일 메모리 해제
 
 	TTF_CloseFont(g_font_gameover); // 폰트 메모리 해제
 
@@ -334,7 +375,7 @@ ItemInterface* MainStage::CreateItem(int windowX, int windowY)
 	int left_up_x = p->posX() - windowX / 2, left_up_y = p->posY() - windowY / 2;
 	int right_down_x = p->posX() + windowX / 2, right_down_y = p->posY() + windowY / 2;
 
-	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() << "\n";
+	cout << "p->posX(): " << p->posX() << " p->posY(): " << p->posY() << increase<<"\n";
 	cout << "left_up_x: " << left_up_x << " left_up_y: " << left_up_y << "\n";
 	cout << "right_down_x: " << right_down_x << " right_down_y: " << right_down_y << "\n";
 
@@ -447,16 +488,4 @@ void MainStage::InitTexts()
 
 	g_gameover_text_kr = SDL_CreateTextureFromSurface(g_renderer, tmp_surface_1);
 	SDL_FreeSurface(tmp_surface_1);
-}
-void MainStage::UpdateTimeTexture(int ms) {
-
-	SDL_Surface* tmp2_surface = TTF_RenderText_Blended(g_font_gameover, std::to_string((long long)ms).c_str(), black);
-
-	text_time_rect.x = 0;
-	text_time_rect.y = 0;
-	text_time_rect.w = tmp2_surface->w;
-	text_time_rect.h = tmp2_surface->h;
-	text_time = SDL_CreateTextureFromSurface(g_renderer, tmp2_surface);
-	SDL_FreeSurface(tmp2_surface);
-
 }

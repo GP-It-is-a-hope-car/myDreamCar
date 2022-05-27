@@ -22,7 +22,7 @@ Platform::Platform(double x, double y)
 {
 	//공중에 떠 있는 플랫폼들을 선언할 때 사용
 	//x , y 는 따로 받아야함
-	SDL_Surface* pf_surface = IMG_Load("../../Resources/dummy_platform.png");
+	SDL_Surface* pf_surface = IMG_Load("../../Resources/platform.png");
 	texture_pf_ = SDL_CreateTextureFromSurface(g_renderer, pf_surface);
 	SDL_FreeSurface(pf_surface);
 

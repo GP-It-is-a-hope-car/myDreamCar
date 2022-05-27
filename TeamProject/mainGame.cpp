@@ -10,14 +10,13 @@ Uint32 g_last_time_ms;
 int g_current_game_phase;
 
 PhaseInterface* game_phases[3];
-
 float g_timestep_s = 1.0f / 60.0f;
 
 int main(int argc, char* argv[]) {
 
 	// Initializing SDL library
 	SDL_Init(SDL_INIT_EVERYTHING);
-	g_window = SDL_CreateWindow("First Window", 100, 100, 700, 700, 0);
+	g_window = SDL_CreateWindow("First Window", 100, 100, 640, 640, 0);
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
 		std::cout << "Mix_OpenAudio " << Mix_GetError() << std::endl;
