@@ -9,8 +9,6 @@
 #include<list>
 #define map_w 30 // 맵 크기 : 가로
 #define map_h 10 // 맵 크기 : 세로
-#define win_w 30 // 윈도우 크기 : 가로
-#define win_h 10 // 윈도우 크기 : 세로
 
 using namespace std;
 
@@ -25,7 +23,7 @@ private:
 	//타일
 	SDL_Texture* tile_texture;
 	SDL_Rect tile_source;
-	SDL_Rect tile_destination[win_w][win_h];
+	SDL_Rect tile_destination[map_w][map_h];
 
 	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;

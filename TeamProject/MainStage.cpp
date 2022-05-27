@@ -106,8 +106,8 @@ MainStage::MainStage()
 	
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
-			tile[i][j].tile_posx = i * 20;
-			tile[i][j].tile_posy = j * 20;
+			tile[i][j].tile_posx = i * 64;
+			tile[i][j].tile_posy = j * 64;
 		}
 	}
 	increase = 0;
@@ -143,20 +143,27 @@ void MainStage::Update() {
 	{
 		p->move_left(g_timestep_s);
 
-		if (bg_source.x > 0) {
+		if (p->posX()==256) {
 			increase--;
 			bg_source.x -= tile_speed;
 			g_truck->getDstRect()->x += tile_speed;
-			
+		}
+		else if (p->posX() != 256) {
+			bg_source.x = bg_source.x;
+			increase = increase;
 		}
 	}
 	if (Right)
 	{
 		p->move_right(g_timestep_s);
-		if (bg_source.x < 1280) {
+		if (p->posX()==288) {
 			increase++;
 			bg_source.x += tile_speed;
 			g_truck->getDstRect()->x -= tile_speed;
+		}
+		else if (p->posX() != 288) {
+			bg_source.x = bg_source.x;
+			increase = increase;
 		}
 	}
 	p->move_jump(g_timestep_s);
@@ -340,10 +347,10 @@ void MainStage::HandleEvents()
 		fuel_num += 10;
 	}*/
 
-	if (bg_source.x>=1279) {
+	if (bg_source.x==1200) {
 		range = 1;
 	}
-	else if (bg_source.x <= 0) {
+	else if (bg_source.x == 0) {
 		range = 2;
 	}
 	else {
