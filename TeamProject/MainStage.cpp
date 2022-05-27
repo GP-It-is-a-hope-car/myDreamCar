@@ -64,7 +64,7 @@ MainStage::MainStage()
 	p = new Player;
 	ground = new Platform;
 
-	for (int i = 1; i <= 5; i++) // 플랫폼 위치 for문으로 선언해주고 arr에 넣어주자!
+	for (int i = 1; i <= 6; i++) // 플랫폼 위치 for문으로 선언해주고 arr에 넣어주자!
 	{
 		Platform* pf = new Platform(50 * i, 90 * i);
 		platform_arr.push_back(pf);
@@ -84,6 +84,8 @@ MainStage::MainStage()
 	//타일 관련
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
+			tile_destination[i][j].w = 64;
+			tile_destination[i][j].h = 64;
 			tile[i][j].state = 0;
 		}
 	}
@@ -136,10 +138,19 @@ void MainStage::Update() {
 		}
 	}
 	p->move_jump(g_timestep_s);
-	p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
+	//p->testOnPlatform(ground->posX(), ground->posY(), ground->width(), ground->height());
 
-	
-
+	// 바닥 충돌 판정
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			if (tile[i][j].state == 1)
+			{
+				p->testOnPlatform(tile_destination[i][j].x, tile_destination[i][j].y, tile_destination[i][j].w, tile_destination[i][j].h);
+			}
+				
+		}
+	}
+	// 플랫폼 충돌 판정
 	for (int i = 0; i < platform_arr.size(); i++)
 	{
 		p->testOnPlatform(platform_arr[i]->posX(), platform_arr[i]->posY(), platform_arr[i]->width(), platform_arr[i]->height());
@@ -190,17 +201,17 @@ void MainStage::Render() {
 		SDL_RenderCopy(g_renderer, item_arr[i]->getTexture(), item_arr[i]->getSrcRect(), item_arr[i]->getDstRect());
 	}
 
-	ground->draw_pf();
+	//ground->draw_pf();
 
 	//타일
 	for (int i = 0; i < platform_arr.size(); i++)
 	{
 		platform_arr[i]->draw_pf();
 	}
+	
 	for (int k = 0; k < map_w; k++) {
 		for (int h = 0; h < map_h; h++) {
-			tile_destination[k][h].w = 64;
-			tile_destination[k][h].h = 64;
+			
 			if (tile[k][h].state == 1) {
 				SDL_RenderCopy(g_renderer, tile_texture, &tile_source, &tile_destination[k][h]);
 			}
