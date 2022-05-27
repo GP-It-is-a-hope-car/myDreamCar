@@ -11,9 +11,13 @@ private:
 	SDL_Rect dest_rect_player_;
 
 	//필요할지도 몰라서 넣는 머리 위의 아이템 표시
-	SDL_Texture* texture_myItem_;
-	SDL_Rect source_rects_myItem_; // 아이템코드에 따라 배열의 요소에 접근 다르게 그리기?
-	SDL_Rect dest_rect_myItem_;
+	SDL_Texture* texture_fuel_;
+	SDL_Rect source_rect_fuel_;
+	SDL_Rect dest_rect_fuel_;
+
+	SDL_Texture* texture_iron_;
+	SDL_Rect source_rect_iron_;
+	SDL_Rect dest_rect_iron_;
 
 	// SFX 예상 되는 거 작성한 것
 	Mix_Chunk* jump_sound_;
@@ -48,6 +52,7 @@ public:
 	virtual void jump();
 
 	//아이템 획득과 반환
+	virtual void showItem();
 	virtual bool getItem(ItemInterface* in);
 	ItemInterface * giveItem(); // 주는 거라 반환값이 있어야 할 것 같은데 데이터타입을 몰라서 일단 보류
 

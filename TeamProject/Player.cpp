@@ -15,13 +15,36 @@ Player::Player()
 	dest_rect_player_.h = source_rect_player_.h;
 
 	//머리 위에 띄울 아이템?
+	SDL_Surface* fuel_surface = IMG_Load("../../Resources/Fuel.png");
+	SDL_SetColorKey(fuel_surface, SDL_TRUE, SDL_MapRGB(fuel_surface->format, 223, 113, 38));
+	texture_fuel_ = SDL_CreateTextureFromSurface(g_renderer, fuel_surface);
+	SDL_FreeSurface(fuel_surface);
+
+	SDL_QueryTexture(texture_fuel_, NULL, NULL, &source_rect_fuel_.w, &source_rect_fuel_.h);
+	source_rect_fuel_.x = source_rect_fuel_.y = 0;
+	dest_rect_fuel_.x = dest_rect_player_.x;
+	dest_rect_fuel_.y = dest_rect_player_.y;
+	dest_rect_fuel_.w = source_rect_fuel_.w/2;
+	dest_rect_fuel_.h = source_rect_fuel_.h/2;
+
+	SDL_Surface* iron_surface = IMG_Load("../../Resources/Iron.png");
+	SDL_SetColorKey(iron_surface, SDL_TRUE, SDL_MapRGB(iron_surface->format, 50, 60, 57));
+	texture_iron_ = SDL_CreateTextureFromSurface(g_renderer, iron_surface);
+	SDL_FreeSurface(iron_surface);
+
+	SDL_QueryTexture(texture_iron_, NULL, NULL, &source_rect_iron_.w, &source_rect_iron_.h);
+	source_rect_iron_.x = source_rect_iron_.y = 0;
+	dest_rect_iron_.x = dest_rect_player_.x;
+	dest_rect_iron_.y = dest_rect_player_.y;
+	dest_rect_iron_.w = source_rect_iron_.w/4;
+	dest_rect_iron_.h = source_rect_iron_.h/4;
 	
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
 	verticalSpeed_ = 0;
 	horizontalSpeed_ = 160;
 	mass_ = 2;
-	gravityAcc_ = 980;
+	gravityAcc_ = 1960;
 	isHoldItem_ = false;
 	isJump_ = false;
 }
@@ -30,6 +53,8 @@ Player::~Player()
 {
 	//사용한 자원들 반환
 	SDL_DestroyTexture(texture_player_);
+	SDL_DestroyTexture(texture_fuel_);
+	SDL_DestroyTexture(texture_iron_);
 	delete ownItem_;
 
 }
@@ -116,6 +141,25 @@ bool Player::getItem(ItemInterface* in)
 	return false;
 }
 
+void Player::showItem()
+{
+	if (isHoldItem_)
+	{
+		if (ownItem_->getItemType() == FUEL)
+		{
+			dest_rect_fuel_.x = dest_rect_player_.x + 16;
+			dest_rect_fuel_.y = dest_rect_player_.y - 48;
+			SDL_RenderCopy(g_renderer, texture_fuel_, &source_rect_fuel_, &dest_rect_fuel_);
+		}
+		else if (ownItem_->getItemType() == IRON)
+		{
+			dest_rect_iron_.x = dest_rect_player_.x + 16;
+			dest_rect_iron_.y = dest_rect_player_.y - 48;
+			SDL_RenderCopy(g_renderer, texture_iron_, &source_rect_iron_, &dest_rect_iron_);
+		}
+	}
+}
+
 ItemInterface * Player::giveItem()
 {
 	//isHoldItem == true
@@ -186,7 +230,7 @@ void Player::jump()
 	{
 		isJump_ = true;
 		//ball launch의 내용 중 y축에 대한 내용만을 이곳에 구현
-		verticalSpeed_ = verticalSpeed_ - (12 * dest_rect_player_.h) / mass_;
+		verticalSpeed_ = verticalSpeed_ - (20 * dest_rect_player_.h) / mass_;
 	}
 }
 
