@@ -75,11 +75,11 @@ MainStage::MainStage()
 	//system("cls");
 
 	// ¿¬·á °ÔÀÌÁö »ý¼º
-	SDL_Surface* status_surface = IMG_Load("../../Resources/gauge.png");
+	SDL_Surface* status_surface = IMG_Load("../../Resources/meter.png");
 	fuel_status = SDL_CreateTextureFromSurface(g_renderer, status_surface);
 	SDL_FreeSurface(status_surface);
-	status_source_rect = { 0,0,200,100 };
-	status_destination_rect = { 0,0,200,40 };
+	status_source_rect = { 29,30,180,160 };
+	status_destination_rect = { 0,512,128,128 };
 
 	//°ÔÀÓ ¿ÀºêÁ§Æ®µéÀÇ ÃÊ±âÈ­
 	InitGameObjectState();
@@ -105,8 +105,11 @@ void MainStage::Update() {
 	//Æ®·°ÀÌ ¿òÁ÷ÀÌ´Â ¼Óµµ
 	truck_time += 1 / 30.0f;
 
-	if (g_truck->getDstRect()->x > tile_destination[59][8].x || fuel_amount <= 0) {
+	// Æ®·°ÀÌ ³¡¿¡ µµ´ÞÇÏ¸é ÇØÇÇ¿£µù
+	if (g_truck->getDstRect()->x > tile_destination[59][8].x ) {
 		g_stage_flag_running = false;
+		g_current_game_phase = PHASE_HAPPY_ENDING; 
+		InitGameObjectState();
 	}
 
 	g_truck->getDstRect()->x += 1;
@@ -178,6 +181,34 @@ void MainStage::Update() {
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
 	}
+	if (fuel_amount < 180 && fuel_amount >= 160) { //90
+		status_source_rect = {226,27,180,160};
+	}
+	else if (fuel_amount < 160 && fuel_amount >= 140) { //80
+		status_source_rect = { 431,27,180,160 };
+	}
+	else if (fuel_amount < 140 && fuel_amount >= 120) {//70
+		status_source_rect = { 31,204,180,160 };
+	}
+	else if (fuel_amount < 120 && fuel_amount >= 100) {//60
+		status_source_rect = { 221,204,180,160 };
+	}
+	else if (fuel_amount < 100 && fuel_amount >= 80) {//50
+		status_source_rect = { 431,204,180,160 };
+	}
+	else if (fuel_amount < 80 && fuel_amount >= 60) {//40
+		status_source_rect = { 14,380,180,160 };
+	}
+	else if (fuel_amount < 60 && fuel_amount >= 40) {//30
+		status_source_rect = { 221,383,180,160 };
+	}
+	else if (fuel_amount < 40 && fuel_amount >= 20) {//20
+		status_source_rect = { 431,383,180,160 };
+	}
+	else if (fuel_amount < 20 && fuel_amount >= 0) {//10
+		status_source_rect = { 16,540,180,160 };
+	}
+
 }
 
 /////////////////////////////////////////////////////////////
@@ -191,8 +222,6 @@ void MainStage::Render() {
 
 	//Æ®·°À» ±×¸²
 	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect[truck_motion_cur], g_truck->getDstRect());
-	//¿¬·á °ÔÀÌÁö¸¦ ±×¸²
-	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 	
 	for (int k = 0; k < map_w; k++) {
 		for (int h = 0; h < map_h; h++) {
@@ -215,6 +244,8 @@ void MainStage::Render() {
 	//ÇÃ·¹ÀÌ¾î
 	p->draw_player();
 	p->showItem();
+	//¿¬·á °ÔÀÌÁö¸¦ ±×¸²
+	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
 	if (!g_stage_flag_running)
 		DrawGameOverText();
@@ -258,12 +289,6 @@ void MainStage::HandleEvents()
 				Right = false;
 			}
 			break;
-		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				InitGameObjectState();
-				g_current_game_phase = PHASE_ENDING;
-			}
 		default:
 			break;
 		}
@@ -285,15 +310,15 @@ void MainStage::HandleEvents()
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
 		fuel_time += fuel_cur_time - fuel_last_time;
-		fuel_amount = fuel_num - (fuel_time /1000);
+		fuel_amount = fuel_num - (fuel_time /400);
 		fuel_last_time = fuel_time;
-		status_source_rect.w = fuel_amount;
-		status_destination_rect.w = fuel_amount;
 		if (fuel_amount >= 200) {
 			fuel_amount = 200;
 		}
 		else if (fuel_amount <= 0) {
 			g_stage_flag_running = false;
+			g_current_game_phase = PHASE_ENDING;
+			InitGameObjectState();
 		}
 	}
 	
@@ -344,18 +369,50 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 			tile[i][j].state = EMPTY;
 		}
 	}
-	//tile[59][5].state = GROUND;
+	// ¶¥ ±×¸²
 	for (int k = 0; k < map_w; k++) {
 		tile[k][9].state = GROUND;
 	}
-	for (int i = 5; i < 8; i++) {
+	// ¹ßÆÇ ±×¸²
+	for (int i = 0; i < 1; i++) { //1Ä­
 		tile[i][7].state = PLATFORM;
+		tile[i + 2][5].state = PLATFORM;
+		tile[i + 11][7].state = PLATFORM;
+		tile[i + 37][7].state = PLATFORM;
+		tile[i + 33][3].state = PLATFORM;
+		tile[i + 53][4].state = PLATFORM;
 	}
-
-	for (int i = 10; i < 13; i++) {
-		tile[i][7].state = PLATFORM;
+	for (int i = 0; i < 2; i++) { //2Ä­
+		tile[i][2].state = PLATFORM;
+		tile[i+8][5].state = PLATFORM;
+		tile[i+11][3].state = PLATFORM;
+		tile[i + 14][4].state = PLATFORM;
+		tile[i + 17][3].state = PLATFORM;
+		tile[i + 21][2].state = PLATFORM;
+		tile[i + 14][6].state = PLATFORM;
+		tile[i + 35][2].state = PLATFORM;
+		tile[i + 55][5].state = PLATFORM;
 	}
-
+	for (int i = 0; i < 3; i++) { //3Ä­
+		tile[i+4][7].state = PLATFORM;
+		tile[i +4][3].state = PLATFORM;
+		tile[i + 19][5].state = PLATFORM;
+		tile[i + 29][5].state = PLATFORM;
+		tile[i + 37][5].state = PLATFORM;
+		tile[i + 45][5].state = PLATFORM;
+		tile[i + 17][7].state = PLATFORM;
+		tile[i + 25][7].state = PLATFORM;
+		tile[i + 33][7].state = PLATFORM;
+		tile[i + 41][7].state = PLATFORM;
+		tile[i + 49][7].state = PLATFORM;
+		tile[i + 25][3].state = PLATFORM;
+		tile[i + 41][3].state = PLATFORM;
+		tile[i + 49][3].state = PLATFORM;
+		tile[i + 57][3].state = PLATFORM;
+	}
+	for (int i = 0; i < 4; i++) { //4Ä­
+		tile[i + 54][7].state = PLATFORM;
+	}
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
 			tile[i][j].tile_posx = i * 64;
