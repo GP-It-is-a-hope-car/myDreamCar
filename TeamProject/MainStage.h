@@ -7,7 +7,7 @@
 #include "Fuel.h"
 #include "Iron.h"
 #include<list>
-#define map_w 30 // ¸Ê Å©±â : °¡·Î
+#define map_w 60 // ¸Ê Å©±â : °¡·Î
 #define map_h 10 // ¸Ê Å©±â : ¼¼·Î
 
 using namespace std;

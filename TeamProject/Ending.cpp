@@ -60,7 +60,7 @@ void Ending::Update()
 void Ending::Render()
 {
 	SDL_Rect tmp_;
-	tmp_ = { 0,50,55,50 };
+	tmp_ = { 50,50,100,100 };
 	
 	SDL_RenderCopy(g_renderer, texture_, &source_rectangle_[end_cur], &destination_rectangle_);
 	SDL_RenderCopy(g_renderer, start_texture, &start_source, &start_dest);
@@ -85,7 +85,7 @@ void Ending::HandleEvents()
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				g_current_game_phase = PHASE_INTRO;
 			}
-			if (event.key.keysym.sym == SDLK_KP_ENTER) {
+			if (event.key.keysym.sym == SDLK_0) {
 				if (re == 0) {
 					g_current_game_phase = PHASE_INTRO;
 				}

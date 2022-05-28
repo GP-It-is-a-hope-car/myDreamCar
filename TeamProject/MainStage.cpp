@@ -46,7 +46,7 @@ MainStage::MainStage()
 
 	InitTexts();
 	//¹è°æ
-	SDL_Surface* bg_surface= IMG_Load("../../Resources/bg_2.png");
+	SDL_Surface* bg_surface= IMG_Load("../../Resources/BG.png");
 	bg_texture= SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 	bg_source= { 0,0,640,640 };
@@ -95,6 +95,7 @@ MainStage::MainStage()
 			tile[i][j].state = EMPTY;
 		}
 	}
+	tile[59][5].state = GROUND;
 	for (int k = 0; k < map_w; k++) {
 		tile[k][9].state = GROUND;
 	}
@@ -154,7 +155,7 @@ void MainStage::Update() {
 		g_truck->getDstRect()->x += 100;
 		truck_time = 0.0f;
 	}
-	if (g_truck->getDstRect()->x > tile_destination[20][8].x || fuel_amount <= 0) {
+	if (g_truck->getDstRect()->x > tile_destination[59][8].x || fuel_amount <= 0) {
 		g_stage_flag_running = false;
 	}
 	if (Left)
@@ -163,7 +164,7 @@ void MainStage::Update() {
 
 		if (p->posX()==256) {
 			increase--;
-			bg_source.x -= tile_speed/2;
+			bg_source.x -= tile_speed;
 			g_truck->getDstRect()->x += tile_speed;
 		}
 		else if (p->posX() != 256) {
@@ -176,7 +177,7 @@ void MainStage::Update() {
 		p->move_right(g_timestep_s);
 		if (p->posX()==288) {
 			increase++;
-			bg_source.x += tile_speed/2;
+			bg_source.x += tile_speed;
 			g_truck->getDstRect()->x -= tile_speed;
 		}
 		else if (p->posX() != 288) {
@@ -331,7 +332,7 @@ void MainStage::HandleEvents()
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
 		fuel_time += fuel_cur_time - fuel_last_time;
-		fuel_amount = fuel_num - (fuel_time /100);
+		fuel_amount = fuel_num - (fuel_time /1000);
 		fuel_last_time = fuel_time;
 		status_source_rect.w = fuel_amount;
 		status_destination_rect.w = fuel_amount;
@@ -346,7 +347,7 @@ void MainStage::HandleEvents()
 		fuel_num += 10;
 	}*/
 
-	if (bg_source.x==320) {
+	if (bg_source.x==3200) {
 		range = 1;
 	}
 	else if (bg_source.x == 0) {
