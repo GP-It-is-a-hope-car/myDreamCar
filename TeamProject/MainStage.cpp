@@ -55,11 +55,14 @@ MainStage::MainStage()
 	SDL_FreeSurface(tile_surface);
 	tile_source = { 0,0,500,300 };
 
+	g_truck_source_rect[0] = { 0,0,160,80 };
+	g_truck_source_rect[1] = { 0,0,160,80 };
+	/*
 	g_truck_source_rect.x = 0; // 트럭 가져오기
 	g_truck_source_rect.y = 0;
 	g_truck_source_rect.w = 160;
 	g_truck_source_rect.h = 80;
-
+	*/
 	//게임 오브젝트들의 초기화
 	InitGameObjectState();
 
@@ -113,7 +116,12 @@ MainStage::MainStage()
 	fuel_amount = 200;
 	fuel_num = 200;
 	fuel_time = 0;
-	
+	//모션 관련 변수
+	truck_motion_num = 2;
+	truck_motion_cur = 0;
+	player_motion_cur = 0;
+	player_motion_Lnum = 2;
+	player_motion_Rnum = 4;
 	Left = false;
 	Right = false;
 	Jump = false;
@@ -127,7 +135,11 @@ MainStage::MainStage()
 // 게임에서 일어나는 변화는 모두 이 곳에서 구현한다.
 // main 함수의 while loop에 의해서 무한히 반복 호출된다는 것을 주의.
 void MainStage::Update() {
-
+	// 트럭이 굴러가는 모션
+	truck_motion_cur++;
+	if (truck_motion_cur >= truck_motion_num) {
+		truck_motion_cur = 0;
+	}
 	//게임 오버라면 게임을 멈춤
 	if (!g_stage_flag_running) return;
 
@@ -221,7 +233,7 @@ void MainStage::Render() {
 	SDL_RenderCopy(g_renderer, bg_texture, &bg_source, &bg_destination);
 
 	//트럭을 그림
-	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect, g_truck->getDstRect());
+	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect[truck_motion_cur], g_truck->getDstRect());
 	//연료 게이지를 그림
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 	
@@ -247,8 +259,8 @@ void MainStage::Render() {
 	p->draw_player();
 	p->showItem();
 
-	/*if (!g_stage_flag_running)
-		DrawGameOverText();*/
+	if (!g_stage_flag_running)
+		DrawGameOverText();
 
 		// 백에서 그린 그림을 한번에 가져옴
 	SDL_RenderPresent(g_renderer);
@@ -277,7 +289,6 @@ void MainStage::HandleEvents()
 			}
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				p->jump();
-				//g_current_game_phase = PHASE_ENDING;
 			}
 			break;
 		case SDL_KEYUP:
@@ -290,7 +301,11 @@ void MainStage::HandleEvents()
 				Right = false;
 			}
 			break;
-
+		case SDL_MOUSEBUTTONDOWN:
+			if (g_stage_flag_running == false&& event.button.button == SDL_BUTTON_LEFT)
+			{
+				g_current_game_phase = PHASE_ENDING;
+			}
 		default:
 			break;
 		}
@@ -313,12 +328,15 @@ void MainStage::HandleEvents()
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
 		fuel_time += fuel_cur_time - fuel_last_time;
-		fuel_amount = fuel_num - (fuel_time / 1000);
+		fuel_amount = fuel_num - (fuel_time /100);
 		fuel_last_time = fuel_time;
 		status_source_rect.w = fuel_amount;
 		status_destination_rect.w = fuel_amount;
 		if (fuel_amount >= 200) {
 			fuel_amount = 200;
+		}
+		else if (fuel_amount <= 0) {
+			g_stage_flag_running = false;
 		}
 	}
 	/*if (연료를 가져다 놨을 시) {

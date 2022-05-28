@@ -25,7 +25,7 @@ private:
 	SDL_Rect tile_source;
 	SDL_Rect tile_destination[map_w][map_h];
 
-	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
+	SDL_Rect g_truck_source_rect[2]; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
 
 	TTF_Font* g_font_gameover; // 게임 폰트 선언
@@ -60,7 +60,11 @@ private:
 
 	int tile_speed; // 타일 스피드	
 	int increase; // 타일을 이동시키는 변수
-
+	int truck_motion_num; //트럭 모션의 개수
+	int truck_motion_cur; //트럭 모션의 현재 상태 
+	int player_motion_Lnum; // 왼쪽으로 가는 모션
+	int player_motion_Rnum; // 오른쪽으로 가는 모션
+	int player_motion_cur; // 현재 모션
 public:
 	MainStage();
 	virtual ~MainStage();
