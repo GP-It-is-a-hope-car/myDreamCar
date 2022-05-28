@@ -7,8 +7,9 @@ class Player
 private:
 	//플레이어 그리기에 필요한 기본 요소
 	SDL_Texture* texture_player_;
-	SDL_Rect source_rect_player_;
+	SDL_Rect source_rects_player_[10];
 	SDL_Rect dest_rect_player_;
+	int index;
 
 	//필요할지도 몰라서 넣는 머리 위의 아이템 표시
 	SDL_Texture* texture_fuel_;
@@ -60,6 +61,7 @@ public:
 	//발판, 아이템, 트럭의 데스티네이션 렉트를 받아와야 하면 매개변수 추가
 	virtual void testOnPlatform(double pf_posX, double pf_posY, double pf_width, double pf_height); //발판 위에 있는가에 대한 검사 있으면 중력의 영향 X
 	virtual void draw_player();
+	virtual void gameover();
 
 	// 플레이어 위치 설정
 	void setPosX(int x) { dest_rect_player_.x = x; }

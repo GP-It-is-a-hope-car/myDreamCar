@@ -4,17 +4,31 @@ extern int range;
 Player::Player()
 {
 	//플레이어 텍스처, 렉트, SFX등 초기화
-	SDL_Surface* player_surface = IMG_Load("../../Resources/dummy.png");
+	int index = 0;
+	SDL_Surface* player_surface = IMG_Load("../../Resources/Sprites.png");
 	texture_player_ = SDL_CreateTextureFromSurface(g_renderer, player_surface);
 	SDL_FreeSurface(player_surface);
 
-	SDL_QueryTexture(texture_player_, NULL, NULL, &source_rect_player_.w, &source_rect_player_.h);
-	source_rect_player_.x = source_rect_player_.y = 0;
-	dest_rect_player_.x = dest_rect_player_.y = 100;
-	dest_rect_player_.w = source_rect_player_.w;
-	dest_rect_player_.h = source_rect_player_.h;
+	//미완
+	source_rects_player_[0] = { 0,0,64,64 };
+	source_rects_player_[1] = { 0,0,64,64 };
+	source_rects_player_[2] = { 0,0,64,64 };
+	source_rects_player_[3] = { 0,0,64,64 };
+	source_rects_player_[4] = { 0,0,64,64 };
+	source_rects_player_[5] = { 0,0,64,64 };
+	source_rects_player_[6] = { 0,0,64,64 };
+	source_rects_player_[7] = { 0,0,64,64 };
+	source_rects_player_[8] = { 0,0,64,64 };
+	source_rects_player_[9] = { 0,0,64,64 };
+
+	dest_rect_player_.x = 0;
+	dest_rect_player_.x = 0;
+	dest_rect_player_.w = 64;
+	dest_rect_player_.h = 64;
+	
 
 	//머리 위에 띄울 아이템?
+	//연료랑 고철도 스프라이트로 수정해야함
 	SDL_Surface* fuel_surface = IMG_Load("../../Resources/Fuel.png");
 	SDL_SetColorKey(fuel_surface, SDL_TRUE, SDL_MapRGB(fuel_surface->format, 223, 113, 38));
 	texture_fuel_ = SDL_CreateTextureFromSurface(g_renderer, fuel_surface);
@@ -22,8 +36,8 @@ Player::Player()
 
 	SDL_QueryTexture(texture_fuel_, NULL, NULL, &source_rect_fuel_.w, &source_rect_fuel_.h);
 	source_rect_fuel_.x = source_rect_fuel_.y = 0;
-	dest_rect_fuel_.x = dest_rect_player_.x;
-	dest_rect_fuel_.y = dest_rect_player_.y;
+	dest_rect_fuel_.x = 0;
+	dest_rect_fuel_.y = 0;
 	dest_rect_fuel_.w = source_rect_fuel_.w/2;
 	dest_rect_fuel_.h = source_rect_fuel_.h/2;
 
@@ -34,8 +48,8 @@ Player::Player()
 
 	SDL_QueryTexture(texture_iron_, NULL, NULL, &source_rect_iron_.w, &source_rect_iron_.h);
 	source_rect_iron_.x = source_rect_iron_.y = 0;
-	dest_rect_iron_.x = dest_rect_player_.x;
-	dest_rect_iron_.y = dest_rect_player_.y;
+	dest_rect_iron_.x = 0;
+	dest_rect_iron_.y = 0;
 	dest_rect_iron_.w = source_rect_iron_.w/4;
 	dest_rect_iron_.h = source_rect_iron_.h/4;
 	
@@ -141,6 +155,11 @@ void Player::move_left(double timestep_s)
 	//점프 중에는 가속도를 기준으로 계산한 속도로 이동하게
 	//이동속도는 적당한 것 찾을 예정
 	//왼쪽 바라보는 스프라이트
+
+	if (index < 3 || index == 5)
+	{
+		index = 4;
+	}
 	double dt = timestep_s;
 	horizontalSpeed_ = 200;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
@@ -153,6 +172,12 @@ void Player::move_left(double timestep_s)
 	else if (dest_rect_player_.x <= 256 && range != 2) {
 		dest_rect_player_.x = 256;
 	}
+	index--;
+
+	if (isJump_)
+	{
+		index = 5;
+	}
 }
 
 void Player::move_right(double timestep_s)
@@ -160,6 +185,11 @@ void Player::move_right(double timestep_s)
 	//마찬가지
 	//매개변수로 키이벤트를 받아 좌우를 하나로 묶을 수 있을 것으로 보임
 	//오른쪽 바라보는 스프라이트
+	
+	if (index > 1)
+	{
+		index = 0;
+	}
 	double dt = timestep_s;
 
 	horizontalSpeed_ = 200;
@@ -172,6 +202,13 @@ void Player::move_right(double timestep_s)
 	}
 	else if (range != 1 && dest_rect_player_.x >=288) {
 		dest_rect_player_.x = 288;
+	}
+
+	index++;
+
+	if (isJump_)
+	{
+		index = 2;
 	}
 }
 
@@ -197,5 +234,27 @@ void Player::jump()
 
 void Player::draw_player()
 {
-	SDL_RenderCopy(g_renderer, texture_player_, &source_rect_player_, &dest_rect_player_);
+	SDL_RenderCopy(g_renderer, texture_player_, &source_rects_player_[index], &dest_rect_player_);
+}
+
+//게임오버 시에 업데이트 넣을 내용
+void Player::gameover()
+{
+	if (index < 3 || index == 7)
+	{
+		index = 6;
+	}
+	else if (index == 6)
+	{
+		index = 7;
+	}
+
+	if ((index > 2 && index < 6) || index == 9)
+	{
+		index = 8;
+	}
+	else if (index == 8)
+	{
+		index = 9;
+	}
 }
