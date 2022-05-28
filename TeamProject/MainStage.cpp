@@ -56,7 +56,7 @@ MainStage::MainStage()
 	tile_source = { 0,0,500,300 };
 
 	g_truck_source_rect[0] = { 0,0,160,80 };
-	g_truck_source_rect[1] = { 0,0,160,80 };
+	g_truck_source_rect[1] = { 160,0,320,80 };
 	/*
 	g_truck_source_rect.x = 0; // Æ®·° °¡Á®¿À±â
 	g_truck_source_rect.y = 0;
@@ -384,7 +384,7 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 }
 void MainStage::MakeGameObjTextures()
 {
-	SDL_Surface* truck_sheet_surface = IMG_Load("../../Resources/Truck.png"); // ÀÌ¹ÌÁö ÆÄÀÏÀ» °¡Á®¿È
+	SDL_Surface* truck_sheet_surface = IMG_Load("../../Resources/truck_motion.png"); // ÀÌ¹ÌÁö ÆÄÀÏÀ» °¡Á®¿È
 	SDL_SetColorKey(truck_sheet_surface, SDL_TRUE, SDL_MapRGB(truck_sheet_surface->format, 0, 155, 133));
 	g_truck_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, truck_sheet_surface);
 
