@@ -181,31 +181,31 @@ void MainStage::Update() {
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
 	}
-	if (fuel_amount < 180 && fuel_amount >= 160) { //90
+	if (fuel_amount < 3600 && fuel_amount >= 3200) { //90
 		status_source_rect = {226,27,180,160};
 	}
-	else if (fuel_amount < 160 && fuel_amount >= 140) { //80
+	else if (fuel_amount < 3200 && fuel_amount >= 2800) { //80
 		status_source_rect = { 431,27,180,160 };
 	}
-	else if (fuel_amount < 140 && fuel_amount >= 120) {//70
+	else if (fuel_amount < 2800 && fuel_amount >= 2400) {//70
 		status_source_rect = { 31,204,180,160 };
 	}
-	else if (fuel_amount < 120 && fuel_amount >= 100) {//60
+	else if (fuel_amount < 2400 && fuel_amount >= 2000) {//60
 		status_source_rect = { 221,204,180,160 };
 	}
-	else if (fuel_amount < 100 && fuel_amount >= 80) {//50
+	else if (fuel_amount < 2000 && fuel_amount >= 1600) {//50
 		status_source_rect = { 431,204,180,160 };
 	}
-	else if (fuel_amount < 80 && fuel_amount >= 60) {//40
+	else if (fuel_amount < 1600 && fuel_amount >= 1200) {//40
 		status_source_rect = { 14,380,180,160 };
 	}
-	else if (fuel_amount < 60 && fuel_amount >= 40) {//30
+	else if (fuel_amount < 1200 && fuel_amount >= 800) {//30
 		status_source_rect = { 221,383,180,160 };
 	}
-	else if (fuel_amount < 40 && fuel_amount >= 20) {//20
+	else if (fuel_amount < 800 && fuel_amount >= 400) {//20
 		status_source_rect = { 431,383,180,160 };
 	}
-	else if (fuel_amount < 20 && fuel_amount >= 0) {//10
+	else if (fuel_amount < 400 && fuel_amount >= 0) {//10
 		status_source_rect = { 16,540,180,160 };
 	}
 
@@ -307,13 +307,9 @@ void MainStage::HandleEvents()
 			}
 		}
 		//ø¨∑·≈Î
-		Uint32 fuel_cur_time = SDL_GetTicks();
-		static Uint32 fuel_last_time = SDL_GetTicks();
-		fuel_time += fuel_cur_time - fuel_last_time;
-		fuel_amount = fuel_num - (fuel_time /400);
-		fuel_last_time = fuel_time;
-		if (fuel_amount >= 200) {
-			fuel_amount = 200;
+		fuel_amount -= 1;
+		if (fuel_amount >= 4000) {
+			fuel_amount = 4000;
 		}
 		else if (fuel_amount <= 0) {
 			g_stage_flag_running = false;
@@ -424,9 +420,7 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	increase = 0;
 	range = 0;
 	// ø¨∑· ∞‘¿Ã¡ˆ ∞¸∑√ ∫Øºˆ
-	fuel_amount = 200;
-	fuel_num = 200;
-	fuel_time = 0;
+	fuel_amount = 4000;
 	metal_count = 0;
 	//∏º« ∞¸∑√ ∫Øºˆ
 	truck_motion_num = 2;
@@ -451,6 +445,10 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	p->setPosX(tile_destination[0][8].x + 100);
 	p->setPosY(tile_destination[0][8].y - 14);
 
+	// πË∞Ê ¿ßƒ° + ø¨∑· ∞‘¿Ã¡ˆ º“Ω∫ √ ±‚»≠
+	bg_source = { 0,0,640,640 };
+	bg_destination = { 0,0,640,640 };
+	status_source_rect = { 29,30,180,160 };
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -546,7 +544,7 @@ void MainStage::GiveItemToTruck()
 
 		if (return_item == FUEL)
 		{
-			fuel_num += 10;
+			fuel_amount += 400;
 			cout << "RETURN FUEL!!\n";
 		}
 		else
