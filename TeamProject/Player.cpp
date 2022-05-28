@@ -10,7 +10,7 @@ Player::Player()
 
 	SDL_QueryTexture(texture_player_, NULL, NULL, &source_rect_player_.w, &source_rect_player_.h);
 	source_rect_player_.x = source_rect_player_.y = 0;
-	dest_rect_player_.x = dest_rect_player_.y = 288;
+	dest_rect_player_.x = dest_rect_player_.y = 100;
 	dest_rect_player_.w = source_rect_player_.w;
 	dest_rect_player_.h = source_rect_player_.h;
 

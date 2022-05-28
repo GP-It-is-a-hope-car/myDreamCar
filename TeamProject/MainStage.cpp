@@ -65,9 +65,6 @@ MainStage::MainStage()
 	g_truck_source_rect.w = 160;
 	g_truck_source_rect.h = 80;
 	*/
-	//게임 오브젝트들의 초기화
-	InitGameObjectState();
-
 	p = new Player;
 	ground = new Platform;
 	pf = new Platform(0, 0);
@@ -84,52 +81,8 @@ MainStage::MainStage()
 	status_source_rect = { 0,0,200,100 };
 	status_destination_rect = { 0,0,200,40 };
 
-
-	//타일 관련
-	for (int i = 0; i < map_w; i++) {
-		for (int j = 0; j < map_h; j++) {
-			tile_destination[i][j].w = 64;
-			tile_destination[i][j].h = 64;
-			tile[i][j].row = i;
-			tile[i][j].col = j;
-			tile[i][j].state = EMPTY;
-		}
-	}
-	tile[59][5].state = GROUND;
-	for (int k = 0; k < map_w; k++) {
-		tile[k][9].state = GROUND;
-	}
-	for (int i = 5; i < 8; i++) {
-		tile[i][7].state = PLATFORM;
-	}
-
-	for (int i = 10; i < 13; i++) {
-		tile[i][7].state = PLATFORM;
-	}
-	
-	for (int i = 0; i < map_w; i++) {
-		for (int j = 0; j < map_h; j++) {
-			tile[i][j].tile_posx = i * 64;
-			tile[i][j].tile_posy = j * 64;
-		}
-	}
-	increase = 0;
-	range = 0;
-	// 연료 게이지 관련 변수
-	fuel_amount = 200;
-	fuel_num = 200;
-	fuel_time = 0;
-	metal_count = 0;
-	//모션 관련 변수
-	truck_motion_num = 2;
-	truck_motion_cur = 0;
-	player_motion_cur = 0;
-	player_motion_Lnum = 2;
-	player_motion_Rnum = 4;
-	Left = false;
-	Right = false;
-	Jump = false;
-	tile_speed =320*g_timestep_s;
+	//게임 오브젝트들의 초기화
+	InitGameObjectState();
 }
 
 /////////////////////////////////////////////////////////////
@@ -139,25 +92,25 @@ MainStage::MainStage()
 // 게임에서 일어나는 변화는 모두 이 곳에서 구현한다.
 // main 함수의 while loop에 의해서 무한히 반복 호출된다는 것을 주의.
 void MainStage::Update() {
+	
+	//게임 오버라면 게임을 멈춤
+	if (!g_stage_flag_running) return;
+
 	// 트럭이 굴러가는 모션
 	truck_motion_cur++;
 	if (truck_motion_cur >= truck_motion_num) {
 		truck_motion_cur = 0;
 	}
-	//게임 오버라면 게임을 멈춤
-	if (!g_stage_flag_running) return;
 
 	//트럭이 움직이는 속도
 	truck_time += 1 / 30.0f;
-	cout << tile_destination[20][8].x << "\n";
 
-	if (truck_time >= 1.0f) {
-		g_truck->getDstRect()->x += 100;
-		truck_time = 0.0f;
-	}
 	if (g_truck->getDstRect()->x > tile_destination[59][8].x || fuel_amount <= 0) {
 		g_stage_flag_running = false;
 	}
+
+	g_truck->getDstRect()->x += 1;
+
 	if (Left)
 	{
 		p->move_left(g_timestep_s);
@@ -308,6 +261,7 @@ void MainStage::HandleEvents()
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
+				InitGameObjectState();
 				g_current_game_phase = PHASE_ENDING;
 			}
 		default:
@@ -327,7 +281,6 @@ void MainStage::HandleEvents()
 				}
 			}
 		}
-		
 		//연료통
 		Uint32 fuel_cur_time = SDL_GetTicks();
 		static Uint32 fuel_last_time = SDL_GetTicks();
@@ -343,10 +296,7 @@ void MainStage::HandleEvents()
 			g_stage_flag_running = false;
 		}
 	}
-	/*if (연료를 가져다 놨을 시) {
-		fuel_num += 10;
-	}*/
-
+	
 	if (bg_source.x==3200) {
 		range = 1;
 	}
@@ -382,9 +332,68 @@ MainStage::~MainStage()
 void MainStage::InitGameObjectState() // 인트로에서 게임페이즈로 넘어올 때 초기화가 필요한 변수들의 초기화 
 {
 	g_stage_flag_running = true;
-	SDL_Rect truck_dst_init = { 0, 500, 160, 80 };
-	g_truck = new Truck(truck_dst_init);
-	truck_time = 0.0f;
+
+	//타일 관련
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+
+			tile_destination[i][j].w = 64;
+			tile_destination[i][j].h = 64;
+			tile[i][j].row = i;
+			tile[i][j].col = j;
+			tile[i][j].state = EMPTY;
+		}
+	}
+	//tile[59][5].state = GROUND;
+	for (int k = 0; k < map_w; k++) {
+		tile[k][9].state = GROUND;
+	}
+	for (int i = 5; i < 8; i++) {
+		tile[i][7].state = PLATFORM;
+	}
+
+	for (int i = 10; i < 13; i++) {
+		tile[i][7].state = PLATFORM;
+	}
+
+	for (int i = 0; i < map_w; i++) {
+		for (int j = 0; j < map_h; j++) {
+			tile[i][j].tile_posx = i * 64;
+			tile[i][j].tile_posy = j * 64;
+			tile_destination[i][j].x = tile[i][j].tile_posx;
+			tile_destination[i][j].y = tile[i][j].tile_posy;
+		}
+	}
+	increase = 0;
+	range = 0;
+	// 연료 게이지 관련 변수
+	fuel_amount = 200;
+	fuel_num = 200;
+	fuel_time = 0;
+	metal_count = 0;
+	//모션 관련 변수
+	truck_motion_num = 2;
+	truck_motion_cur = 0;
+	player_motion_cur = 0;
+	player_motion_Lnum = 2;
+	player_motion_Rnum = 4;
+	Left = false;
+	Right = false;
+	Jump = false;
+	tile_speed = 320 * g_timestep_s;
+
+	SDL_Rect truck_dst_init = { tile_destination[0][8].x, tile_destination[0][8].y - 14, 160, 80};
+
+	//트럭 위치 초기화
+	if (g_truck == nullptr)
+		g_truck = new Truck(truck_dst_init);
+	else
+		g_truck->setDstRect(truck_dst_init);
+
+	//플레이어 위치 초기화
+	p->setPosX(tile_destination[0][8].x + 100);
+	p->setPosY(tile_destination[0][8].y - 14);
+
 }
 void MainStage::MakeGameObjTextures()
 {

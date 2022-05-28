@@ -20,5 +20,6 @@ public:
 	int getIronCnt() { return ironCnt; }
 	void addIronCnt(int n) { ironCnt += n; };
 	SDL_Rect* getDstRect() { return &dest_rect_truck_; }
+	void setDstRect(SDL_Rect dst) { dest_rect_truck_ = dst; }
 	
 };

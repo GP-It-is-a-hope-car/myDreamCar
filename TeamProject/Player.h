@@ -61,5 +61,7 @@ public:
 	virtual void testOnPlatform(double pf_posX, double pf_posY, double pf_width, double pf_height); //발판 위에 있는가에 대한 검사 있으면 중력의 영향 X
 	virtual void draw_player();
 
-
+	// 플레이어 위치 설정
+	void setPosX(int x) { dest_rect_player_.x = x; }
+	void setPosY(int y) { dest_rect_player_.y = y; }
 };
