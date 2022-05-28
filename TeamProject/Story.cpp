@@ -23,7 +23,6 @@ void Story::Update()
 	source_rectangle_.y += 1;
 	if (source_rectangle_.y > 1280) {
 		source_rectangle_.y = 1280;
-		g_current_game_phase = PHASE_MAINSTAGE;
 	}
 }
 

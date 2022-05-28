@@ -11,7 +11,7 @@ bool g_flag_running;
 Uint32 g_last_time_ms;
 int g_current_game_phase;
 
-PhaseInterface* game_phases[3];
+PhaseInterface* game_phases[5];
 float g_timestep_s = 1.0f / 60.0f;
 
 int main(int argc, char* argv[]) {
@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
 	game_phases[PHASE_INTRO] = new Intro;
 	game_phases[PHASE_STORY] = new Story;
 	game_phases[PHASE_EXPLAIN] = new Explain;
-	game_phases[PHASE_ENDING] = new Ending;
 	game_phases[PHASE_MAINSTAGE] = new MainStage;
+	game_phases[PHASE_ENDING] = new Ending;
 	g_current_game_phase = PHASE_INTRO;
 
 	g_last_time_ms = SDL_GetTicks();

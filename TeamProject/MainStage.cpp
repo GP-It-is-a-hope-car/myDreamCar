@@ -304,7 +304,7 @@ void MainStage::HandleEvents()
 		case SDL_MOUSEBUTTONDOWN:
 			if (g_stage_flag_running == false&& event.button.button == SDL_BUTTON_LEFT)
 			{
-				g_current_game_phase = PHASE_ENDING;
+				//g_current_game_phase = PHASE_ENDING;
 			}
 		default:
 			break;

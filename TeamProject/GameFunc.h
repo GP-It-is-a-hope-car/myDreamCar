@@ -68,4 +68,4 @@ public:
 	virtual void addTime(float time) { creatTime += time; }
 };
 
-extern PhaseInterface* game_phases[3];
+extern PhaseInterface* game_phases[5];
