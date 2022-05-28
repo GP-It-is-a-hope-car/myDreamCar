@@ -42,7 +42,7 @@ Player::Player()
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	mass_ = 2;
 	gravityAcc_ = 1960;
 	isHoldItem_ = false;
@@ -68,7 +68,7 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 		dest_rect_player_.x + dest_rect_player_.w * 0.05 < pf_posX + pf_width)
 	{
 		if (dest_rect_player_.y + dest_rect_player_.h >= pf_posY &&
-			dest_rect_player_.y + dest_rect_player_.h < pf_posY + pf_height*0.5)
+			dest_rect_player_.y + dest_rect_player_.h < pf_posY + pf_height*0.3)
 		{
 			if (verticalSpeed_ > 0)
 			{
@@ -79,6 +79,7 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 		}
 	}
 }
+
 bool Player::getItem(int in)
 {
 	//검사결과 겹치면 아이템을 획득
@@ -141,7 +142,7 @@ void Player::move_left(double timestep_s)
 	//이동속도는 적당한 것 찾을 예정
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
 	if (dest_rect_player_.x<256&&range==2) {
 		dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
@@ -161,7 +162,7 @@ void Player::move_right(double timestep_s)
 	//오른쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
 	if (range==1&&dest_rect_player_.x >288) {
 		dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
@@ -190,7 +191,7 @@ void Player::jump()
 	{
 		isJump_ = true;
 		//ball launch의 내용 중 y축에 대한 내용만을 이곳에 구현
-		verticalSpeed_ = verticalSpeed_ - (20 * dest_rect_player_.h) / mass_;
+		verticalSpeed_ = verticalSpeed_ - (21 * dest_rect_player_.h) / mass_;
 	}
 }
 
