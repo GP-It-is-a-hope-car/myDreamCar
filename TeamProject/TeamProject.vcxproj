@@ -145,6 +145,7 @@
     <ClInclude Include="Ending.h" />
     <ClInclude Include="Explain.h" />
     <ClInclude Include="GameFunc.h" />
+    <ClInclude Include="Happy_Ending.h" />
     <ClInclude Include="Intro.h" />
     <ClInclude Include="Iron.h" />
     <ClInclude Include="MainStage.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Fuel.cpp" />
     <ClCompile Include="Fuel.h" />
     <ClCompile Include="GameFunc.cpp" />
+    <ClCompile Include="Happy_Ending.cpp" />
     <ClCompile Include="Intro.cpp" />
     <ClCompile Include="Iron.cpp" />
     <ClCompile Include="MainGame.cpp" />

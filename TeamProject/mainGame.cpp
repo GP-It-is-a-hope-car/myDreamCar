@@ -4,6 +4,7 @@
 #include "Explain.h"
 #include "MainStage.h"
 #include "Ending.h"
+#include "Happy_Ending.h"
 
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
@@ -11,7 +12,7 @@ bool g_flag_running;
 Uint32 g_last_time_ms;
 int g_current_game_phase;
 
-PhaseInterface* game_phases[5];
+PhaseInterface* game_phases[6];
 float g_timestep_s = 1.0f / 60.0f;
 
 int main(int argc, char* argv[]) {
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
 	game_phases[PHASE_EXPLAIN] = new Explain;
 	game_phases[PHASE_MAINSTAGE] = new MainStage;
 	game_phases[PHASE_ENDING] = new Ending;
+	game_phases[PHASE_HAPPY_ENDING] = new Happy_ending;
 	g_current_game_phase = PHASE_INTRO;
 
 	g_last_time_ms = SDL_GetTicks();
@@ -59,10 +61,10 @@ int main(int argc, char* argv[]) {
 
 	ClearGame();
 
-	/*for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		delete game_phases[i];
-	}*/
+	}
 
 	SDL_DestroyRenderer(g_renderer);
 	SDL_DestroyWindow(g_window);

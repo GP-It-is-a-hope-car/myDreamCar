@@ -21,6 +21,7 @@ const int PHASE_STORY = 1;
 const int PHASE_EXPLAIN = 2;
 const int PHASE_MAINSTAGE = 3;
 const int PHASE_ENDING = 4;
+const int PHASE_HAPPY_ENDING = 5;
 
 const int EMPTY = 0;
 const int GROUND = 1;
@@ -68,4 +69,4 @@ public:
 	virtual void addTime(float time) { creatTime += time; }
 };
 
-extern PhaseInterface* game_phases[5];
+extern PhaseInterface* game_phases[6];

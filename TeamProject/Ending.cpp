@@ -87,7 +87,7 @@ void Ending::HandleEvents()
 			}
 			if (event.key.keysym.sym == SDLK_0) {
 				if (re == 0) {
-					g_current_game_phase = PHASE_INTRO;
+					g_current_game_phase = PHASE_HAPPY_ENDING;
 				}
 				else if(re==1) {
 					exit(0);
