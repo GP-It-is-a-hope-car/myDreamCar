@@ -17,12 +17,18 @@ void ClearGame();
 
 // Game Phases
 const int PHASE_INTRO = 0;
-const int PHASE_MAINSTAGE = 1;
-const int PHASE_ENDING = 2;
+const int PHASE_STORY = 1;
+const int PHASE_EXPLAIN = 2;
+const int PHASE_MAINSTAGE = 3;
+const int PHASE_ENDING = 4;
 
-const int FUEL = 0;
-const int IRON = 1;
+const int EMPTY = 0;
+const int GROUND = 1;
+const int PLATFORM = 2;
+const int FUEL = 3;
+const int IRON = 4;
 
+const float ITEMTIME = 5.0f;
 extern int g_current_game_phase;
 extern bool g_flag_running;
 extern SDL_Window* g_window;

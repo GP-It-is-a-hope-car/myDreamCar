@@ -9,8 +9,6 @@
 #include<list>
 #define map_w 30 // 맵 크기 : 가로
 #define map_h 10 // 맵 크기 : 세로
-#define win_w 30 // 윈도우 크기 : 가로
-#define win_h 10 // 윈도우 크기 : 세로
 
 using namespace std;
 
@@ -25,17 +23,10 @@ private:
 	//타일
 	SDL_Texture* tile_texture;
 	SDL_Rect tile_source;
-	SDL_Rect tile_destination[win_w][win_h];
+	SDL_Rect tile_destination[map_w][map_h];
 
-	SDL_Rect g_truck_source_rect; // 트럭 이미지에서 잘라오는 부분
+	SDL_Rect g_truck_source_rect[2]; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
-	//SDL_Rect g_destination_apple;
-
-
-	//SDL_Rect g_destination_apple;
-
-
-	//SDL_Rect g_destination_apple;
 
 	TTF_Font* g_font_gameover; // 게임 폰트 선언
 	SDL_Texture* g_gameover_text_kr;
@@ -48,10 +39,7 @@ private:
 	SDL_Rect status_destination_rect;
 
 	Truck* g_truck;
-	vector<ItemInterface*> item_arr;
-	/*ItemInterface* g_fuel;
-	ItemInterface* g_iron;*/
-
+	
 	bool visited[13][13];
 	int g_cur_key;
 	int g_stage_last_time_ms;
@@ -68,11 +56,15 @@ private:
 	// 흘러간 시간 기록
 	double g_elapsed_time_ms;
 
+	float truck_time = 0.0f;
 
-	int tile_speed; // 타일 스피드
-	
+	int tile_speed; // 타일 스피드	
 	int increase; // 타일을 이동시키는 변수
-
+	int truck_motion_num; //트럭 모션의 개수
+	int truck_motion_cur; //트럭 모션의 현재 상태 
+	int player_motion_Lnum; // 왼쪽으로 가는 모션
+	int player_motion_Rnum; // 오른쪽으로 가는 모션
+	int player_motion_cur; // 현재 모션
 public:
 	MainStage();
 	virtual ~MainStage();
@@ -82,19 +74,15 @@ public:
 	virtual void Render() override;
 
 	void InitGameObjectState();
-	//void CheckIsSnakeBody();
 	void DrawGameText();
 	void DrawGameOverText();
 	void InitChunk();
 	void InitTexts();
 	void UpdateTimeTexture(int ms);
 	void MakeGameObjTextures();
-	//bool GetApple();
-	//void SnakeMove();
-	//void MakeSnake();
-	ItemInterface* CreateItem(int windowX, int windowY);
+	void CreateItem();
 	void DistinctItem();
+	void GiveItemToTruck();
 	int Random(int n);
-	//void CreateApple();
 	pair<int, int> CreateRandomPosition();
 };

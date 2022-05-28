@@ -5,7 +5,7 @@ Platform::Platform()
 	//이미지를 가져와서 텍스처에 붙이기
 	//가장 바닥, 그라운드를 선언할 때 사용 x = 0, y = 0
 	//테스트는 중앙
-	SDL_Surface* pf_surface = IMG_Load("../../Resources/dummy_platform.png");
+	SDL_Surface* pf_surface = IMG_Load("../../Resources/platform.png");
 	texture_pf_ = SDL_CreateTextureFromSurface(g_renderer, pf_surface);
 	SDL_FreeSurface(pf_surface);
 

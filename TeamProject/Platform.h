@@ -13,7 +13,9 @@ public:
 	double height() { return dest_rect_pf_.h; }
 	double posX() { return dest_rect_pf_.x; }
 	double posY() { return dest_rect_pf_.y; }
-	SDL_Rect getRect() { return dest_rect_pf_; }
+	SDL_Rect* getDstRect() { return &dest_rect_pf_; }
+	SDL_Rect* getSrcRect() { return &source_rect_pf_; }
+	SDL_Texture* getTexture() { return texture_pf_; }
 	virtual void draw_pf();
 	
 private:

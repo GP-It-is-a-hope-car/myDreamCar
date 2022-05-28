@@ -42,11 +42,12 @@ Player::Player()
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	mass_ = 2;
 	gravityAcc_ = 1960;
 	isHoldItem_ = false;
 	isJump_ = false;
+	ownItem_ = -1;
 }
 
 Player::~Player()
@@ -55,7 +56,7 @@ Player::~Player()
 	SDL_DestroyTexture(texture_player_);
 	SDL_DestroyTexture(texture_fuel_);
 	SDL_DestroyTexture(texture_iron_);
-	delete ownItem_;
+	//delete ownItem_;
 
 }
 
@@ -67,7 +68,7 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 		dest_rect_player_.x + dest_rect_player_.w * 0.05 < pf_posX + pf_width)
 	{
 		if (dest_rect_player_.y + dest_rect_player_.h >= pf_posY &&
-			dest_rect_player_.y + dest_rect_player_.h < pf_posY + pf_height*0.5)
+			dest_rect_player_.y + dest_rect_player_.h < pf_posY + pf_height*0.3)
 		{
 			if (verticalSpeed_ > 0)
 			{
@@ -79,60 +80,13 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 	}
 }
 
-bool Player::testOnItem(double it_posX, double it_posY, double it_width, double it_height)
-{
-	//동일한 방식으로 검사
-	//확인되면 getItem()실행 -> isHoldItem = true -> 이 상태에선 충돌해도 의미X
-	//아래쪽에서 먹는 동작은 허용하지 않을 것이므로, 하단에 대한 검사는 고려X
-	//좌측 + 상단, 우측 + 상단을 기준으로 검사
-	//좌측상단
-	if (dest_rect_player_.x + dest_rect_player_.w > it_posX &&
-		it_posX + it_width > dest_rect_player_.x + dest_rect_player_.w &&
-		dest_rect_player_.y + dest_rect_player_.h > it_posY &&
-		it_posY + it_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	//우측상단
-	if (dest_rect_player_.x > it_posX &&
-		it_posX + it_width > dest_rect_player_.x &&
-		dest_rect_player_.y + dest_rect_player_.h > it_posY &&
-		it_posY + it_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool Player::testOnTruck(double tr_posX, double tr_posY, double tr_width, double tr_height)
-{
-	//아이템과 동일한 방식
-	//isHoldItem = true일 때 트럭에 전달 -> ownItem에 따라서 다른 결과 -> isHoldItem == false 의미 X
-	if (dest_rect_player_.x + dest_rect_player_.w > tr_posX &&
-		tr_posX + tr_width > dest_rect_player_.x + dest_rect_player_.w &&
-		dest_rect_player_.y + dest_rect_player_.h > tr_posY &&
-		tr_posY + tr_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	//우측상단
-	if (dest_rect_player_.x > tr_posX &&
-		tr_posX + tr_width > dest_rect_player_.x &&
-		dest_rect_player_.y + dest_rect_player_.h > tr_posY &&
-		tr_posY + tr_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool Player::getItem(ItemInterface* in)
+bool Player::getItem(int in)
 {
 	//검사결과 겹치면 아이템을 획득
 	//isHoldItem = true
 	//ownItem = 들고 있는 아이템 종류
 	//이걸 위해서 아이템 클래스를 받아오거나 해야할 것 같음 
-	if (!isHoldItem_ && ownItem_ == nullptr)
+	if (!isHoldItem_ && ownItem_ == -1)
 	{
 		ownItem_ = in;
 		isHoldItem_ = true;
@@ -145,13 +99,13 @@ void Player::showItem()
 {
 	if (isHoldItem_)
 	{
-		if (ownItem_->getItemType() == FUEL)
+		if (ownItem_ == FUEL)
 		{
 			dest_rect_fuel_.x = dest_rect_player_.x + 16;
 			dest_rect_fuel_.y = dest_rect_player_.y - 48;
 			SDL_RenderCopy(g_renderer, texture_fuel_, &source_rect_fuel_, &dest_rect_fuel_);
 		}
-		else if (ownItem_->getItemType() == IRON)
+		else if (ownItem_ == IRON)
 		{
 			dest_rect_iron_.x = dest_rect_player_.x + 16;
 			dest_rect_iron_.y = dest_rect_player_.y - 48;
@@ -160,7 +114,7 @@ void Player::showItem()
 	}
 }
 
-ItemInterface * Player::giveItem()
+int Player::giveItem()
 {
 	//isHoldItem == true
 	//검사결과 겹치면 트럭에 아이템에 전달 -> 반환값이 있다면 데이터타입은?
@@ -170,13 +124,13 @@ ItemInterface * Player::giveItem()
 	//아이템 클래스를 반환하거나 뭔가 동작이 필요
 	if (isHoldItem_)
 	{
-		ItemInterface* tmp_own;
+		int tmp_own;
 		tmp_own = ownItem_;
-		ownItem_ = nullptr;
+		ownItem_ = -1;
 		isHoldItem_ = false;
 		return tmp_own;
 	}
-	return nullptr;
+	return -1; // 아무것도 안들고 있다면 -1 반환
 }
 
 void Player::move_left(double timestep_s)
@@ -188,13 +142,16 @@ void Player::move_left(double timestep_s)
 	//이동속도는 적당한 것 찾을 예정
 	//왼쪽 바라보는 스프라이트
 	double dt = timestep_s;
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
-	if (dest_rect_player_.x<=256&&range!=2) {
-		dest_rect_player_.x = 256;
-	}
-	else if (dest_rect_player_.x <= 256 && range == 2) {
+	if (dest_rect_player_.x<256&&range==2) {
 		dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
+	}
+	if (dest_rect_player_.x > 256 && range == 1) {
+		dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
+	}
+	else if (dest_rect_player_.x <= 256 && range != 2) {
+		dest_rect_player_.x = 256;
 	}
 }
 
@@ -205,15 +162,19 @@ void Player::move_right(double timestep_s)
 	//오른쪽 바라보는 스프라이트
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 160;
+	horizontalSpeed_ = 200;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
-	if (range!=1&&dest_rect_player_.x >=288) {
-		dest_rect_player_.x = 288;
-	}
-	else if (range == 1 && dest_rect_player_.x >=288) {
+	if (range==1&&dest_rect_player_.x >288) {
 		dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
 	}
+	else if (range == 2 && dest_rect_player_.x < 288) {
+		dest_rect_player_.x = dest_rect_player_.x +dt * horizontalSpeed_;
+	}
+	else if (range != 1 && dest_rect_player_.x >=288) {
+		dest_rect_player_.x = 288;
+	}
 }
+
 
 void Player::move_jump(double timestep_s)
 {
@@ -230,7 +191,7 @@ void Player::jump()
 	{
 		isJump_ = true;
 		//ball launch의 내용 중 y축에 대한 내용만을 이곳에 구현
-		verticalSpeed_ = verticalSpeed_ - (20 * dest_rect_player_.h) / mass_;
+		verticalSpeed_ = verticalSpeed_ - (21 * dest_rect_player_.h) / mass_;
 	}
 }
 

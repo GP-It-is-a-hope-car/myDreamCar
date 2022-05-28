@@ -1,6 +1,8 @@
 #include "GameFunc.h"
-#include "MainStage.h"
 #include "Intro.h"
+#include "Story.h"
+#include "Explain.h"
+#include "MainStage.h"
 #include "Ending.h"
 
 SDL_Window* g_window;
@@ -30,6 +32,8 @@ int main(int argc, char* argv[]) {
 	//g_current_game_phase = PHASE_MAINSTAGE;
 		
 	game_phases[PHASE_INTRO] = new Intro;
+	game_phases[PHASE_STORY] = new Story;
+	game_phases[PHASE_EXPLAIN] = new Explain;
 	game_phases[PHASE_ENDING] = new Ending;
 	game_phases[PHASE_MAINSTAGE] = new MainStage;
 	g_current_game_phase = PHASE_INTRO;
