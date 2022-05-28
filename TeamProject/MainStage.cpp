@@ -7,6 +7,8 @@
 
 using namespace std;
 int range;
+int metal_count;
+
 Player* p;
 Platform* ground;
 Platform* pf;
@@ -116,6 +118,7 @@ MainStage::MainStage()
 	fuel_amount = 200;
 	fuel_num = 200;
 	fuel_time = 0;
+	metal_count = 0;
 	//모션 관련 변수
 	truck_motion_num = 2;
 	truck_motion_cur = 0;
@@ -302,9 +305,9 @@ void MainStage::HandleEvents()
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (g_stage_flag_running == false&& event.button.button == SDL_BUTTON_LEFT)
+			if (event.button.button == SDL_BUTTON_LEFT)
 			{
-				//g_current_game_phase = PHASE_ENDING;
+				g_current_game_phase = PHASE_ENDING;
 			}
 		default:
 			break;
@@ -484,6 +487,7 @@ void MainStage::GiveItemToTruck()
 			g_truck->addIronCnt(1);
 			cout << g_truck->getIronCnt() << "\n";
 			cout << "RETURN IRON!!\n";
+			metal_count++; // 고철 수 증가 : 스코어
 		}
 	}
 }
