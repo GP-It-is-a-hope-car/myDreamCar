@@ -78,6 +78,7 @@ public:
 	void MakeGameObjTextures();
 	void CreateItem();
 	void DistinctItem();
+	void GiveItemToTruck();
 	int Random(int n);
 	pair<int, int> CreateRandomPosition();
 };

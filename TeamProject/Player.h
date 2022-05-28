@@ -59,9 +59,6 @@ public:
 	//플레이어의 충돌을 테스트하기 위한 함수
 	//발판, 아이템, 트럭의 데스티네이션 렉트를 받아와야 하면 매개변수 추가
 	virtual void testOnPlatform(double pf_posX, double pf_posY, double pf_width, double pf_height); //발판 위에 있는가에 대한 검사 있으면 중력의 영향 X
-	virtual bool testOnItem(double it_posX, double it_posY, double it_width, double it_height); //아이템과 겹치는가에 대한 검사 겹치면 getItem() 실행
-	virtual bool testOnTruck(double tr_posX, double tr_posY, double tr_width, double tr_height);
-
 	virtual void draw_player();
 
 

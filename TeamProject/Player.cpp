@@ -79,54 +79,6 @@ void Player::testOnPlatform(double pf_posX, double pf_posY, double pf_width, dou
 		}
 	}
 }
-
-bool Player::testOnItem(double it_posX, double it_posY, double it_width, double it_height)
-{
-	//동일한 방식으로 검사
-	//확인되면 getItem()실행 -> isHoldItem = true -> 이 상태에선 충돌해도 의미X
-	//아래쪽에서 먹는 동작은 허용하지 않을 것이므로, 하단에 대한 검사는 고려X
-	//좌측 + 상단, 우측 + 상단을 기준으로 검사
-	//좌측상단
-	if (dest_rect_player_.x + dest_rect_player_.w > it_posX &&
-		it_posX + it_width > dest_rect_player_.x + dest_rect_player_.w &&
-		dest_rect_player_.y + dest_rect_player_.h > it_posY &&
-		it_posY + it_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	//우측상단
-	if (dest_rect_player_.x > it_posX &&
-		it_posX + it_width > dest_rect_player_.x &&
-		dest_rect_player_.y + dest_rect_player_.h > it_posY &&
-		it_posY + it_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool Player::testOnTruck(double tr_posX, double tr_posY, double tr_width, double tr_height)
-{
-	//아이템과 동일한 방식
-	//isHoldItem = true일 때 트럭에 전달 -> ownItem에 따라서 다른 결과 -> isHoldItem == false 의미 X
-	if (dest_rect_player_.x + dest_rect_player_.w > tr_posX &&
-		tr_posX + tr_width > dest_rect_player_.x + dest_rect_player_.w &&
-		dest_rect_player_.y + dest_rect_player_.h > tr_posY &&
-		tr_posY + tr_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	//우측상단
-	if (dest_rect_player_.x > tr_posX &&
-		tr_posX + tr_width > dest_rect_player_.x &&
-		dest_rect_player_.y + dest_rect_player_.h > tr_posY &&
-		tr_posY + tr_height > dest_rect_player_.y + dest_rect_player_.h)
-	{
-		return true;
-	}
-	return false;
-}
-
 bool Player::getItem(int in)
 {
 	//검사결과 겹치면 아이템을 획득

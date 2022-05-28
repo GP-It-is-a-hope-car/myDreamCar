@@ -5,9 +5,6 @@
 #include <atlstr.h> // 한국어 쓰려면 필요함
 #include<vector>
 
-#define SIZE 8
-#define CELL 50
-
 using namespace std;
 int range;
 Player* p;
@@ -131,14 +128,20 @@ MainStage::MainStage()
 // main 함수의 while loop에 의해서 무한히 반복 호출된다는 것을 주의.
 void MainStage::Update() {
 
+	//게임 오버라면 게임을 멈춤
+	if (!g_stage_flag_running) return;
+
 	//트럭이 움직이는 속도
 	truck_time += 1 / 30.0f;
+	cout << tile_destination[20][8].x << "\n";
 
 	if (truck_time >= 1.0f) {
-		g_truck->getDstRect()->x += 10;
+		g_truck->getDstRect()->x += 100;
 		truck_time = 0.0f;
 	}
-	
+	if (g_truck->getDstRect()->x > tile_destination[20][8].x || fuel_amount <= 0) {
+		g_stage_flag_running = false;
+	}
 	if (Left)
 	{
 		p->move_left(g_timestep_s);
@@ -198,6 +201,9 @@ void MainStage::Update() {
 
 	//아이템 먹음
 	DistinctItem();
+
+	//트럭과 플레이어의 위치를 검사 후 닿았다면 아이템을 트럭에 반환
+	GiveItemToTruck();
 
 	g_elapsed_time_ms += 33;
 	if (time_sec < 0) {
@@ -274,34 +280,6 @@ void MainStage::HandleEvents()
 				//g_current_game_phase = PHASE_ENDING;
 			}
 			break;
-
-		case SDL_MOUSEBUTTONDOWN:
-
-			// If the mouse left button is pressed. 
-			if (event.button.button == SDL_BUTTON_LEFT){
-
-				int return_item = p->giveItem();
-
-				if (return_item == -1) return;
-
-				if (return_item == FUEL)
-				{
-					cout << "RETURN FUEL!!\n";
-				}
-				else
-				{
-					cout << "RETURN IRON!!\n";
-				}
-				/*if (!g_stage_flag_running)
-				{
-					g_current_game_phase = PHASE_ENDING;
-					InitGameObjectState();
-				}
-				delete game_phases[g_current_game_phase];
-				game_phases[g_current_game_phase] = new Ending;*/
-			}
-			break;
-
 		case SDL_KEYUP:
 			if (event.key.keysym.sym == SDLK_LEFT)
 			{
@@ -366,8 +344,6 @@ void MainStage::HandleEvents()
 MainStage::~MainStage()
 {
 	SDL_DestroyTexture(g_truck_sheet_texture); // 트럭 메모리 해제
-	/*SDL_DestroyTexture(g_fuel_sheet_texture); // 연료 메모리 해제
-	SDL_DestroyTexture(g_iron_sheet_texture);*/ // 고철 메모리 해제
 	SDL_DestroyTexture(g_gameover_text_kr); // 게임오버 텍스트 메모리 해제
 	SDL_DestroyTexture(fuel_status); // 연료통 메모리 해제
 	SDL_DestroyTexture(bg_texture); // 배경화면 메모리 해제
@@ -383,6 +359,7 @@ MainStage::~MainStage()
 
 void MainStage::InitGameObjectState() // 인트로에서 게임페이즈로 넘어올 때 초기화가 필요한 변수들의 초기화 
 {
+	g_stage_flag_running = true;
 	SDL_Rect truck_dst_init = { 0, 500, 160, 80 };
 	g_truck = new Truck(truck_dst_init);
 	truck_time = 0.0f;
@@ -461,6 +438,34 @@ void MainStage::DistinctItem()
 					}
 				}
 			}
+		}
+	}
+}
+void MainStage::GiveItemToTruck()
+{
+	int player_x = p->posX() + p->width() / 2;
+	int player_y = p->posY() + p->height() / 2;
+	int return_item;
+	SDL_Rect truck_rect = *g_truck->getDstRect();
+
+	if (player_x > truck_rect.x && player_y > truck_rect.y &&
+		player_x < truck_rect.x + truck_rect.w &&
+		player_y < truck_rect.y + truck_rect.h)
+	{
+		return_item = p->giveItem();
+
+		if (return_item == -1) return;
+
+		if (return_item == FUEL)
+		{
+			fuel_num += 10;
+			cout << "RETURN FUEL!!\n";
+		}
+		else
+		{
+			g_truck->addIronCnt(1);
+			cout << g_truck->getIronCnt() << "\n";
+			cout << "RETURN IRON!!\n";
 		}
 	}
 }
