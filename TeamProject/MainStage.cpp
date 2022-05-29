@@ -132,21 +132,36 @@ void MainStage::Update() {
 		p->move_left(g_timestep_s);
 
 		if (p->posX()==256) {
-			increase--;
-			bg_source.x -= tile_speed;
+			if (bg_source.x != 0) {
+				increase--;
+				bg_source.x -= tile_speed;
+
+			}
+			else if(bg_source.x==0) {
+				bg_source.x = bg_source.x;
+				increase = increase;
+			}
+			
 			g_truck->getDstRect()->x += tile_speed;
 		}
 		else if (p->posX() != 256) {
 			bg_source.x = bg_source.x;
 			increase = increase;
+			
 		}
 	}
 	if (Right)
 	{
 		p->move_right(g_timestep_s);
 		if (p->posX()==288) {
-			increase++;
-			bg_source.x += tile_speed;
+			if (bg_source.x != 3200) {
+				increase++;
+				bg_source.x += tile_speed;
+			}
+			else if (bg_source.x == 3200) {
+				bg_source.x = bg_source.x;
+				increase = increase;
+			}
 			g_truck->getDstRect()->x -= tile_speed;
 		}
 		else if (p->posX() != 288) {
