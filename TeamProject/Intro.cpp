@@ -57,7 +57,7 @@ void Intro::HandleEvents()
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				g_current_game_phase = PHASE_STORY;
+				g_current_game_phase = PHASE_EXPLAIN;
 			}
 		default:
 			break;
