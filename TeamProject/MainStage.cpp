@@ -177,10 +177,10 @@ void MainStage::Update() {
 
 	{	// æ∆¿Ã≈€ ∑£¥˝ ª˝º∫ ∆ƒ∆Æ
 		itemTime += 1 / 30.0f;
-		if (itemTime >= ITEMTIME) // æ∆¿Ã≈€ ª˝º∫ ¡÷±‚
+		if (itemTime >= 2.0f) // æ∆¿Ã≈€ ª˝º∫ ¡÷±‚
 		{
 			itemTime = 0;
-			CreateItem();		
+			CreateItem();			
 		}
 	}
 
@@ -495,6 +495,11 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	bg_destination = { 0,0,640,640 };
 	status_source_rect = { 29,30,180,160 };
 	advancement_source = { 77,305,650,65 };
+	// Ω√¿€ Ω√ æ∆¿Ã≈€ ª˝º∫
+	for (int i = 0; i < 5; i++) // æ∆¿Ã≈€ 5∞≥æø ª˝º∫
+	{
+		CreateItem();
+	}
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -595,8 +600,7 @@ void MainStage::GiveItemToTruck()
 		}
 		else
 		{
-			g_truck->addIronCnt(1);
-			cout << g_truck->getIronCnt() << "\n";
+			cout << metal_count << "\n";
 			cout << "RETURN IRON!!\n";
 			metal_count++; // ∞Ì√∂ ºˆ ¡ı∞° : Ω∫ƒ⁄æÓ
 		}
