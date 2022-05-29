@@ -283,8 +283,14 @@ void MainStage::Render() {
 	}
 
 	//플레이어
+	if (!g_stage_flag_running)
+	{
+		p->gameover();
+	}
+
 	p->draw_player();
 	p->showItem();
+
 	//연료 게이지를 그림
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
