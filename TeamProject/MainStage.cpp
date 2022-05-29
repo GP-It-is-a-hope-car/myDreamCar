@@ -26,7 +26,6 @@ enum Key
 
 bool Left;
 bool Right;
-bool Jump;
 extern bool g_stage_flag_running;
 
 // Å¸ÀÏ ±¸Á¶Ã¼ ¼±¾ð
@@ -474,12 +473,8 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	//¸ð¼Ç °ü·Ã º¯¼ö
 	truck_motion_num = 2;
 	truck_motion_cur = 0;
-	player_motion_cur = 0;
-	player_motion_Lnum = 2;
-	player_motion_Rnum = 4;
 	Left = false;
 	Right = false;
-	Jump = false;
 	tile_speed = 320 * g_timestep_s;
 
 	SDL_Rect truck_dst_init = { tile_destination[0][8].x, tile_destination[0][8].y - 14, 160, 80};
@@ -490,7 +485,8 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	else
 		g_truck->setDstRect(truck_dst_init);
 
-	//ÇÃ·¹ÀÌ¾î À§Ä¡ ÃÊ±âÈ­
+	//ÇÃ·¹ÀÌ¾î ÃÊ±âÈ­
+	p->reInit();
 	p->setPosX(tile_destination[0][8].x + 100);
 	p->setPosY(tile_destination[0][8].y - 14);
 

@@ -9,7 +9,7 @@ private:
 	SDL_Texture* texture_player_;
 	SDL_Rect source_rects_player_[10];
 	SDL_Rect dest_rect_player_;
-	int index;
+	
 
 	//필요할지도 몰라서 넣는 머리 위의 아이템 표시
 	SDL_Texture* texture_fuel_;
@@ -22,11 +22,11 @@ private:
 
 	// SFX 예상 되는 거 작성한 것
 	Mix_Chunk* jump_sound_;
-	Mix_Chunk* move_sound_;
 	Mix_Chunk* get_item_sound_;
-	Mix_Chunk* give_item_sound_;
 
 	//필요할 것 같은 변수
+	int index;
+	int prev; // 모션
 	double verticalSpeed_; //수직 - 점프랑 관련
 	double horizontalSpeed_; //수평 - 좌우 이동과 관련
 	double mass_; // 무게
@@ -62,6 +62,9 @@ public:
 	virtual void testOnPlatform(double pf_posX, double pf_posY, double pf_width, double pf_height); //발판 위에 있는가에 대한 검사 있으면 중력의 영향 X
 	virtual void draw_player();
 	virtual void gameover();
+
+	//재시작을 위한 함수
+	virtual void reInit();
 
 	// 플레이어 위치 설정
 	void setPosX(int x) { dest_rect_player_.x = x; }
