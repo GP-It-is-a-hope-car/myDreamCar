@@ -151,7 +151,6 @@
     <ClInclude Include="MainStage.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Story.h" />
     <ClInclude Include="Truck.h" />
   </ItemGroup>
   <ItemGroup>
@@ -167,7 +166,6 @@
     <ClCompile Include="MainStage.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Story.cpp" />
     <ClCompile Include="Truck.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

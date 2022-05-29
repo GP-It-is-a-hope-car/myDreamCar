@@ -373,7 +373,7 @@ void MainStage::HandleEvents()
 			}
 		}
 		//ø¨∑·≈Î
-		fuel_amount -= 2;
+		fuel_amount -= 3;
 		if (fuel_amount >= 4000) {
 			fuel_amount = 4000;
 		}
@@ -493,7 +493,7 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	truck_motion_cur = 0;
 	Left = false;
 	Right = false;
-	tile_speed = 320 * g_timestep_s;
+	tile_speed = 480 * g_timestep_s;
 
 	SDL_Rect truck_dst_init = { tile_destination[0][8].x, tile_destination[0][8].y - 14, 160, 80};
 
