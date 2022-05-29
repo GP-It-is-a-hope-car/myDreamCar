@@ -651,7 +651,7 @@ void MainStage::GiveItemToTruck()
 
 		if (return_item == FUEL)
 		{
-			fuel_amount += 400;
+			fuel_amount += 600;
 			Mix_PlayChannel(-1, give_fuel_sound, 0);
 			cout << "RETURN FUEL!!\n";
 		}
