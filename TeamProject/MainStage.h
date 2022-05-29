@@ -36,9 +36,15 @@ private:
 	SDL_Color white = { 255, 255, 255, 0 }; // 색깔 선언
 	SDL_Color black = { 0, 0, 0, 0 }; // 색깔 선언
 
+	//연료게이지
 	SDL_Texture* fuel_status;
 	SDL_Rect status_source_rect;
 	SDL_Rect status_destination_rect;
+	
+	//진척도
+	SDL_Texture* advancement_texture;
+	SDL_Rect advancement_destination;
+	SDL_Rect advancement_source;
 
 	Truck* g_truck;
 	

@@ -62,10 +62,17 @@ MainStage::MainStage()
 	tile_texture = SDL_CreateTextureFromSurface(g_renderer, tile_surface);
 	SDL_FreeSurface(tile_surface);
 	tile_source = { 0,0,500,300 };
+	advancement_destination = { 32 ,64,576,64 };
 
 	g_truck_source_rect[0] = { 0,0,160,80 };
 	g_truck_source_rect[1] = { 160,0,320,80 };
 	
+	//¡¯√¥µµ
+	SDL_Surface* advancement_surface = IMG_Load("../../Resources/gauge.png");
+	advancement_texture = SDL_CreateTextureFromSurface(g_renderer, advancement_surface);
+	SDL_FreeSurface(advancement_surface);
+	advancement_source = {77,305,650,65 };
+
 	p = new Player;
 	ground = new Platform;
 	pf = new Platform(0, 0);
@@ -188,6 +195,23 @@ void MainStage::Update() {
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
 	}
+	// ¡¯√¥µµ π¸¿ß
+	if (g_truck->getDstRect()->x >= tile_destination[12][8].x && g_truck->getDstRect()->x < tile_destination[24][8].x) {
+		advancement_source = { 77,233,650,65 };
+	}
+	else if (g_truck->getDstRect()->x >= tile_destination[24][8].x && g_truck->getDstRect()->x < tile_destination[36][8].x) {
+		advancement_source = { 77,176,650,65 };
+	}
+	else if (g_truck->getDstRect()->x >= tile_destination[36][8].x && g_truck->getDstRect()->x < tile_destination[48][8].x) {
+		advancement_source = { 77,116,650,65 };
+	}
+	else if (g_truck->getDstRect()->x >= tile_destination[48][8].x && g_truck->getDstRect()->x < tile_destination[59][8].x) {
+		advancement_source = { 77,56,650,65 };
+	}
+
+
+
+	// ø¨∑· ∞‘¿Ã¡ˆ π¸¿ß
 	if (fuel_amount < 3600 && fuel_amount >= 3200) { //90
 		status_source_rect = {226,27,180,160};
 	}
@@ -234,7 +258,8 @@ void MainStage::Render() {
 
 	//πË∞Ê¿ª ±◊∏≤
 	SDL_RenderCopy(g_renderer, bg_texture, &bg_source, &bg_destination);
-
+	//¡¯√¥µµ∏¶ ±◊∏≤
+	SDL_RenderCopy(g_renderer, advancement_texture, &advancement_source, &advancement_destination);
 	//∆Æ∑∞¿ª ±◊∏≤
 	SDL_RenderCopy(g_renderer, g_truck_sheet_texture, &g_truck_source_rect[truck_motion_cur], g_truck->getDstRect());
 	
@@ -366,6 +391,7 @@ MainStage::~MainStage()
 	SDL_DestroyTexture(fuel_status); // ø¨∑·≈Î ∏ﬁ∏∏Æ «ÿ¡¶
 	SDL_DestroyTexture(bg_texture); // πË∞Ê»≠∏È ∏ﬁ∏∏Æ «ÿ¡¶
 	SDL_DestroyTexture(tile_texture); // ≈∏¿œ ∏ﬁ∏∏Æ «ÿ¡¶
+	SDL_DestroyTexture(advancement_texture); // ¡¯√¥µµ ∏ﬁ∏∏Æ «ÿ¡¶
 
 	TTF_CloseFont(g_font_gameover); // ∆˘∆Æ ∏ﬁ∏∏Æ «ÿ¡¶
 
@@ -442,9 +468,9 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	}
 	increase = 0;
 	range = 0;
+	metal_count = 0;
 	// ø¨∑· ∞‘¿Ã¡ˆ ∞¸∑√ ∫Øºˆ
 	fuel_amount = 4000;
-	metal_count = 0;
 	//∏º« ∞¸∑√ ∫Øºˆ
 	truck_motion_num = 2;
 	truck_motion_cur = 0;
@@ -468,10 +494,11 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	p->setPosX(tile_destination[0][8].x + 100);
 	p->setPosY(tile_destination[0][8].y - 14);
 
-	// πË∞Ê ¿ßƒ° + ø¨∑· ∞‘¿Ã¡ˆ º“Ω∫ √ ±‚»≠
+	// πË∞Ê ¿ßƒ° + ø¨∑· ∞‘¿Ã¡ˆ + ¡¯√¥µµ √ ±‚»≠
 	bg_source = { 0,0,640,640 };
 	bg_destination = { 0,0,640,640 };
 	status_source_rect = { 29,30,180,160 };
+	advancement_source = { 77,305,650,65 };
 }
 void MainStage::MakeGameObjTextures()
 {
