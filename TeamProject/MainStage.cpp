@@ -38,13 +38,17 @@ typedef struct Tile {
 };
 Tile tile[map_w][map_h];
 vector<Tile> platform_tile;
-// Init() 대신 생성자를 사용함
+
+
 MainStage::MainStage()
 {
 	g_stage_flag_running = true;
 
 	g_main_mus = Mix_LoadMUS("../../Resources/stage.mp3"); // 배경음악 로드	
 	Mix_VolumeMusic(40);
+
+	give_fuel_sound = Mix_LoadWAV("../../Resources/fuel_wav.wav");
+	give_iron_sound = Mix_LoadWAV("../../Resources/metal_wav.wav");
 
 	MakeGameObjTextures();
 
@@ -64,6 +68,9 @@ MainStage::MainStage()
 
 	g_truck_source_rect[0] = { 0,0,160,80 };
 	g_truck_source_rect[1] = { 160,0,320,80 };
+
+	gang_fuel_source = { 1045,837,256,256 };
+	gang_iron_source = { 64, 0, 64, 64 };
 	
 	//진척도
 	SDL_Surface* advancement_surface = IMG_Load("../../Resources/gauge.png");
@@ -76,10 +83,7 @@ MainStage::MainStage()
 	pf = new Platform(0, 0);
 	fuel = new Fuel({ 0,0,0,0 });
 	iron = new Iron({ 0,0,0,0 });
-	// Clear the console screen.
-	// 표준출력 화면을 깨끗히 지운다.
-	//system("cls");
-
+	
 	// 연료 게이지 생성
 	SDL_Surface* status_surface = IMG_Load("../../Resources/meter.png");
 	fuel_status = SDL_CreateTextureFromSurface(g_renderer, status_surface);
@@ -90,6 +94,12 @@ MainStage::MainStage()
 	//게임 오브젝트들의 초기화
 	InitGameObjectState();
 	metal_count = 0;
+
+
+	// Clear the console screen.
+	// 표준출력 화면을 깨끗히 지운다.
+	//system("cls");
+
 }
 
 /////////////////////////////////////////////////////////////
@@ -178,9 +188,21 @@ void MainStage::Update() {
 			{
 				p->testOnPlatform(tile_destination[i][j].x, tile_destination[i][j].y, tile_destination[i][j].w, tile_destination[i][j].h);
 			}
-			if (tile[i][j].state == FUEL || tile[i][j].state == IRON)
+			if (tile[i][j].state == FUEL || tile[i][j].state == IRON ||
+				tile[i][j].state == GANGFUEL || tile[i][j].state == GANGIRON)
 			{
 				tile[i][j].time += 1 / 30.0f;
+				if (tile[i][j].time >= ITEMTIME - 1.5f)
+				{
+					if (tile[i][j].state == FUEL)
+					{
+						tile[i][j].state = GANGFUEL;
+					}
+					else if (tile[i][j].state == IRON)
+					{
+						tile[i][j].state = GANGIRON;
+					}
+				}
 				if (tile[i][j].time >= ITEMTIME)
 				{
 					tile[i][j].time = 0.0f;
@@ -293,6 +315,12 @@ void MainStage::Render() {
 			}
 			else if (tile[k][h].state == IRON) {
 				SDL_RenderCopy(g_renderer, iron->getTexture(), iron->getSrcRect(), &tile_destination[k][h]);
+			}
+			else if (tile[k][h].state == GANGFUEL) {
+				SDL_RenderCopy(g_renderer, gang_fuel_texture, &gang_fuel_source, &tile_destination[k][h]);
+			}
+			else if (tile[k][h].state == GANGIRON) {
+				SDL_RenderCopy(g_renderer, gang_iron_texture, &gang_iron_source, &tile_destination[k][h]);
 			}
 		}
 	}
@@ -525,7 +553,17 @@ void MainStage::MakeGameObjTextures()
 	SDL_SetColorKey(truck_sheet_surface, SDL_TRUE, SDL_MapRGB(truck_sheet_surface->format, 0, 155, 133));
 	g_truck_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, truck_sheet_surface);
 
+	SDL_Surface* gang_fuel_sheet_surface = IMG_Load("../../Resources/Sprites.png"); // 이미지 파일을 가져옴
+	SDL_SetColorKey(gang_fuel_sheet_surface, SDL_TRUE, SDL_MapRGB(gang_fuel_sheet_surface->format, 255, 255, 255));
+	gang_fuel_texture = SDL_CreateTextureFromSurface(g_renderer, gang_fuel_sheet_surface);
+
+	SDL_Surface* gang_iron_sheet_surface = IMG_Load("../../Resources/metal_motion.png"); // 이미지 파일을 가져옴
+	SDL_SetColorKey(gang_iron_sheet_surface, SDL_TRUE, SDL_MapRGB(gang_iron_sheet_surface->format, 255, 255, 255));
+	gang_iron_texture = SDL_CreateTextureFromSurface(g_renderer, gang_iron_sheet_surface);
+
 	SDL_FreeSurface(truck_sheet_surface);
+	SDL_FreeSurface(gang_fuel_sheet_surface);
+	SDL_FreeSurface(gang_iron_sheet_surface);
 }
 
 void MainStage::CreateItem()
@@ -614,11 +652,13 @@ void MainStage::GiveItemToTruck()
 		if (return_item == FUEL)
 		{
 			fuel_amount += 400;
+			Mix_PlayChannel(-1, give_fuel_sound, 0);
 			cout << "RETURN FUEL!!\n";
 		}
 		else
 		{
 			metal_count++;
+			Mix_PlayChannel(-1, give_iron_sound, 0);
 			cout << metal_count << "\n";
 			cout << "RETURN IRON!!\n";
 		}

@@ -27,8 +27,11 @@ const int GROUND = 1;
 const int PLATFORM = 2;
 const int FUEL = 3;
 const int IRON = 4;
+const int GANGFUEL = 5;
+const int GANGIRON = 6;
 
-const float ITEMTIME = 25.0f;
+
+const float ITEMTIME = 26.5f;
 extern bool g_stage_flag_running;
 extern int g_current_game_phase;
 extern bool g_flag_running;

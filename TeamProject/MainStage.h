@@ -18,6 +18,8 @@ class MainStage : public PhaseInterface
 private:
 	
 	Mix_Music* g_main_mus; // 메인 배경음악 변수 선언
+	Mix_Chunk* give_fuel_sound;
+	Mix_Chunk* give_iron_sound;
 
 	//배경
 	SDL_Texture* bg_texture;
@@ -27,6 +29,13 @@ private:
 	SDL_Texture* tile_texture;
 	SDL_Rect tile_source;
 	SDL_Rect tile_destination[map_w][map_h];
+
+	//갱단
+	SDL_Texture* gang_fuel_texture;
+	SDL_Rect gang_fuel_source;
+
+	SDL_Texture* gang_iron_texture;
+	SDL_Rect gang_iron_source;
 
 	SDL_Rect g_truck_source_rect[2]; // 트럭 이미지에서 잘라오는 부분
 	SDL_Texture* g_truck_sheet_texture;
