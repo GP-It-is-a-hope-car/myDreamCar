@@ -10,6 +10,7 @@ public:
 	virtual void HandleEvents() override;
 	virtual void Update() override;
 	virtual void Render() override;
+	virtual void Score_metal(int metal_count);
 
 private:
 	//¹è°æ

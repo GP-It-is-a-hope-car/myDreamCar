@@ -2,6 +2,7 @@
 
 #include "GameFunc.h"
 #include "Player.h"
+#include "Happy_Ending.h"
 #include "Platform.h"
 #include "Truck.h"
 #include "Fuel.h"

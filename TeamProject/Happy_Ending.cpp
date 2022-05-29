@@ -18,12 +18,9 @@ Happy_ending::Happy_ending()
 	start_source = { 0,0,200,200 };
 	start_dest = { 240,400,40,40 };
 
-	SDL_Color white = { 0, 0, 0, 0 };
+	SDL_Color black = { 0, 0, 0, 0 };
+	
 	TTF_Font* font = TTF_OpenFont("../../Resources/bmjua.ttf", 50);
-	SDL_Surface* tmp_surface = TTF_RenderText_Blended(font, std::to_string((long long)metal_count).c_str(), white);
-	metal_texture_rect = { 0,0,150,100 };
-	metal_texture = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-	SDL_FreeSurface(tmp_surface);
 
 
 	re = 0;
@@ -61,8 +58,19 @@ Happy_ending::~Happy_ending()
 	SDL_DestroyTexture(texture_);
 }
 
+void Happy_ending::Score_metal(int metal_count) {
+	TTF_Font* font1 = TTF_OpenFont("../../Resources/bmjua.ttf", 50);
+	SDL_Color black = { 0, 0, 0, 0 };
+	SDL_Surface* tmp_surface = TTF_RenderText_Blended(font1, std::to_string((long long)metal_count).c_str(), black);
+	metal_texture_rect = { 0,0,150,100 };
+	metal_texture = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	SDL_FreeSurface(tmp_surface);
+	TTF_CloseFont(font1);
+}
+
 void Happy_ending::Update()
 {
+	Score_metal(metal_count);
 }
 
 
@@ -99,6 +107,7 @@ void Happy_ending::HandleEvents()
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				if (re == 0) {
 					g_current_game_phase = PHASE_INTRO;
+					metal_count = 0;
 				}
 				else if (re == 1) {
 					exit(0);

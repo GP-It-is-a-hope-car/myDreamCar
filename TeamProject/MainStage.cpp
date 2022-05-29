@@ -9,7 +9,6 @@
 using namespace std;
 int range;
 int metal_count;
-
 Player* p;
 Platform* ground;
 Platform* pf;
@@ -61,7 +60,7 @@ MainStage::MainStage()
 	tile_texture = SDL_CreateTextureFromSurface(g_renderer, tile_surface);
 	SDL_FreeSurface(tile_surface);
 	tile_source = { 0,0,500,300 };
-	advancement_destination = { 32 ,64,576,64 };
+	advancement_destination = { 32 ,10,576,64 };
 
 	g_truck_source_rect[0] = { 0,0,160,80 };
 	g_truck_source_rect[1] = { 160,0,320,80 };
@@ -70,7 +69,7 @@ MainStage::MainStage()
 	SDL_Surface* advancement_surface = IMG_Load("../../Resources/gauge.png");
 	advancement_texture = SDL_CreateTextureFromSurface(g_renderer, advancement_surface);
 	SDL_FreeSurface(advancement_surface);
-	advancement_source = {77,305,650,65 };
+	advancement_source = {85,305,640,65 };
 
 	p = new Player;
 	ground = new Platform;
@@ -87,9 +86,10 @@ MainStage::MainStage()
 	SDL_FreeSurface(status_surface);
 	status_source_rect = { 29,30,180,160 };
 	status_destination_rect = { 0,512,128,128 };
-
+	
 	//∞‘¿” ø¿∫Í¡ß∆ÆµÈ¿« √ ±‚»≠
 	InitGameObjectState();
+	metal_count = 0;
 }
 
 /////////////////////////////////////////////////////////////
@@ -194,18 +194,19 @@ void MainStage::Update() {
 	if (time_sec < 0) {
 		//g_current_game_phase = PHASE_ENDING;
 	}
+	
 	// ¡¯√¥µµ π¸¿ß
 	if (g_truck->getDstRect()->x >= tile_destination[12][8].x && g_truck->getDstRect()->x < tile_destination[24][8].x) {
-		advancement_source = { 77,233,650,65 };
+		advancement_source = { 85,245,650,65 };
 	}
 	else if (g_truck->getDstRect()->x >= tile_destination[24][8].x && g_truck->getDstRect()->x < tile_destination[36][8].x) {
-		advancement_source = { 77,176,650,65 };
+		advancement_source = { 85,180,650,65 };
 	}
 	else if (g_truck->getDstRect()->x >= tile_destination[36][8].x && g_truck->getDstRect()->x < tile_destination[48][8].x) {
-		advancement_source = { 77,116,650,65 };
+		advancement_source = { 85,120,650,65 };
 	}
 	else if (g_truck->getDstRect()->x >= tile_destination[48][8].x && g_truck->getDstRect()->x < tile_destination[59][8].x) {
-		advancement_source = { 77,56,650,65 };
+		advancement_source = { 85,60,650,65 };
 	}
 
 
@@ -247,6 +248,7 @@ void MainStage::Update() {
 		Mix_FadeInMusic(g_main_mus, -1, 2000); // πË∞Ê¿Ωæ« «√∑π¿Ã
 		isMainPlay = true;
 	}
+
 }
 
 /////////////////////////////////////////////////////////////
@@ -350,7 +352,7 @@ void MainStage::HandleEvents()
 			}
 		}
 		//ø¨∑·≈Î
-		fuel_amount -= 1;
+		fuel_amount -= 2;
 		if (fuel_amount >= 4000) {
 			fuel_amount = 4000;
 		}
@@ -467,9 +469,9 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	}
 	increase = 0;
 	range = 0;
-	metal_count = 0;
 	// ø¨∑· ∞‘¿Ã¡ˆ ∞¸∑√ ∫Øºˆ
 	fuel_amount = 4000;
+	
 	//∏º« ∞¸∑√ ∫Øºˆ
 	truck_motion_num = 2;
 	truck_motion_cur = 0;
@@ -494,7 +496,7 @@ void MainStage::InitGameObjectState() // ¿Œ∆Æ∑Œø°º≠ ∞‘¿”∆‰¿Ã¡Ó∑Œ ≥—æÓø√ ∂ß √ ±‚»
 	bg_source = { 0,0,640,640 };
 	bg_destination = { 0,0,640,640 };
 	status_source_rect = { 29,30,180,160 };
-	advancement_source = { 77,305,650,65 };
+	advancement_source = { 85,305,640,65 };
 	// Ω√¿€ Ω√ æ∆¿Ã≈€ ª˝º∫
 	for (int i = 0; i < 5; i++) // æ∆¿Ã≈€ 5∞≥æø ª˝º∫
 	{
@@ -600,9 +602,9 @@ void MainStage::GiveItemToTruck()
 		}
 		else
 		{
+			metal_count++;
 			cout << metal_count << "\n";
 			cout << "RETURN IRON!!\n";
-			metal_count++; // ∞Ì√∂ ºˆ ¡ı∞° : Ω∫ƒ⁄æÓ
 		}
 	}
 }
