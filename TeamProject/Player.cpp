@@ -14,10 +14,6 @@ Player::Player()
 	source_rects_player_[3] = { 824,20,176,224 };
 	source_rects_player_[4] = { 1084,20,176,224 };
 	source_rects_player_[5] = { 1311,24,176,224 };
-	source_rects_player_[6] = { 1772,24,176,224 };
-	source_rects_player_[7] = { 2028,24,176,224 };
-	source_rects_player_[8] = { 2352,24,176,224 };
-	source_rects_player_[9] = { 2636,24,176,224 };
 
 	dest_rect_player_.x = 0;
 	dest_rect_player_.x = 0;
@@ -258,28 +254,6 @@ void Player::jump()
 void Player::draw_player()
 {
 	SDL_RenderCopy(g_renderer, texture_player_, &source_rects_player_[index], &dest_rect_player_);
-}
-
-//게임오버 시에 업데이트 넣을 내용
-void Player::gameover()
-{
-	if (index < 3 || index == 7)
-	{
-		index = 6;
-	}
-	else if (index == 6)
-	{
-		index = 7;
-	}
-
-	if ((index > 2 && index < 6) || index == 9)
-	{
-		index = 8;
-	}
-	else if (index == 8)
-	{
-		index = 9;
-	}
 }
 
 void Player::reInit()

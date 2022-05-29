@@ -7,7 +7,7 @@ Intro::Intro()
 	Mix_VolumeMusic(40);
 
 	// For Texture
-	SDL_Surface* temp_surface = IMG_Load("../../Resources/intro_prototype.png");
+	SDL_Surface* temp_surface = IMG_Load("../../Resources/Intro.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
 	source_rectangle_ = { 0,0,640,640 };
