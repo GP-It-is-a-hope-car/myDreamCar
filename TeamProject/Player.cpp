@@ -117,13 +117,13 @@ void Player::showItem()
 	{
 		if (ownItem_ == FUEL)
 		{
-			dest_rect_fuel_.x = dest_rect_player_.x + 18;
+			dest_rect_fuel_.x = dest_rect_player_.x + 13;
 			dest_rect_fuel_.y = dest_rect_player_.y - 48;
 			SDL_RenderCopy(g_renderer, texture_fuel_, &source_rect_fuel_, &dest_rect_fuel_);
 		}
 		else if (ownItem_ == IRON)
 		{
-			dest_rect_iron_.x = dest_rect_player_.x + 18;
+			dest_rect_iron_.x = dest_rect_player_.x + 13;
 			dest_rect_iron_.y = dest_rect_player_.y - 48;
 			SDL_RenderCopy(g_renderer, texture_iron_, &source_rect_iron_, &dest_rect_iron_);
 		}
