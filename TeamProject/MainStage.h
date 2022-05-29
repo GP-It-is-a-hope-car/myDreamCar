@@ -89,9 +89,6 @@ public:
 	virtual void Render() override;
 
 	void InitGameObjectState();
-	void DrawGameText();
-	void InitChunk();
-	void InitTexts();
 	void UpdateTimeTexture(int ms);
 	void MakeGameObjTextures();
 	void CreateItem();

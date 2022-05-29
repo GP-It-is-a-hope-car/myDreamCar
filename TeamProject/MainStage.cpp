@@ -52,7 +52,6 @@ MainStage::MainStage()
 
 	MakeGameObjTextures();
 
-	InitTexts();
 	//배경
 	SDL_Surface* bg_surface= IMG_Load("../../Resources/BG.png");
 	bg_texture= SDL_CreateTextureFromSurface(g_renderer, bg_surface);
@@ -646,7 +645,7 @@ void MainStage::GiveItemToTruck()
 
 		if (return_item == FUEL)
 		{
-			fuel_amount += 600;
+			fuel_amount += 800;
 			Mix_PlayChannel(-1, give_fuel_sound, 0);
 			cout << "RETURN FUEL!!\n";
 		}
@@ -658,34 +657,4 @@ void MainStage::GiveItemToTruck()
 			cout << "RETURN IRON!!\n";
 		}
 	}
-}
-void MainStage::DrawGameText()
-{
-
-}
-void MainStage::InitChunk()
-{
-	/*g_missile_fire_sound = Mix_LoadWAV("../../Resources/fire.mp3"); // 효과음 로드
-	Mix_VolumeChunk(g_missile_fire_sound, 24);
-
-	g_open_box_sound = Mix_LoadWAV("../../Resources/Coin.wav"); // 효과음 로드
-	Mix_VolumeChunk(g_open_box_sound, 24);
-
-	g_ride_tank_sound = Mix_LoadWAV("../../Resources/IO.mp3"); // 효과음 로드
-	Mix_VolumeChunk(g_ride_tank_sound, 24);*/
-
-}
-
-void MainStage::InitTexts()
-{
-	g_font_gameover = TTF_OpenFont("../../Resources/DungGeunMo.ttf", 32);
-	SDL_Surface* tmp_surface_1 = TTF_RenderUTF8_Blended(g_font_gameover, CW2A(L"Game Over!", CP_UTF8), black);
-	//텍스트 가져오기
-	g_gameover_text_kr_rect.x = 0;
-	g_gameover_text_kr_rect.y = 0;
-	g_gameover_text_kr_rect.w = tmp_surface_1->w;
-	g_gameover_text_kr_rect.h = tmp_surface_1->h;
-
-	g_gameover_text_kr = SDL_CreateTextureFromSurface(g_renderer, tmp_surface_1);
-	SDL_FreeSurface(tmp_surface_1);
 }
