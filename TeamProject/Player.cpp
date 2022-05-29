@@ -8,16 +8,16 @@ Player::Player()
 	texture_player_ = SDL_CreateTextureFromSurface(g_renderer, player_surface);
 	SDL_FreeSurface(player_surface);
 
-	source_rects_player_[0] = { 50,27,176,224 };
-	source_rects_player_[1] = { 307,23,176,224 };
-	source_rects_player_[2] = { 568,19,176,224 };
-	source_rects_player_[3] = { 820,19,176,224 };
-	source_rects_player_[4] = { 1080,19,176,224 };
-	source_rects_player_[5] = { 1311,23,176,224 };
-	source_rects_player_[6] = { 1770,23,176,224 };
-	source_rects_player_[7] = { 2025,23,176,224 };
-	source_rects_player_[8] = { 2347,23,176,224 };
-	source_rects_player_[9] = { 2632,23,176,224 };
+	source_rects_player_[0] = { 52,28,176,224 };
+	source_rects_player_[1] = { 308,24,176,224 };
+	source_rects_player_[2] = { 568,20,176,224 };
+	source_rects_player_[3] = { 824,20,176,224 };
+	source_rects_player_[4] = { 1084,20,176,224 };
+	source_rects_player_[5] = { 1311,24,176,224 };
+	source_rects_player_[6] = { 1772,24,176,224 };
+	source_rects_player_[7] = { 2028,24,176,224 };
+	source_rects_player_[8] = { 2352,24,176,224 };
+	source_rects_player_[9] = { 2636,24,176,224 };
 
 	dest_rect_player_.x = 0;
 	dest_rect_player_.x = 0;
