@@ -15,6 +15,8 @@ using namespace std;
 class MainStage : public PhaseInterface
 {
 private:
+	
+	Mix_Music* g_main_mus; // 메인 배경음악 변수 선언
 
 	//배경
 	SDL_Texture* bg_texture;
@@ -43,7 +45,6 @@ private:
 	bool visited[13][13];
 	int g_cur_key;
 	int g_stage_last_time_ms;
-	bool g_stage_flag_running, g_stage_is_colliding;
 	int time_ms;
 	int time_sec;
 	int game_time;
@@ -73,7 +74,6 @@ public:
 
 	void InitGameObjectState();
 	void DrawGameText();
-	void DrawGameOverText();
 	void InitChunk();
 	void InitTexts();
 	void UpdateTimeTexture(int ms);
@@ -82,5 +82,4 @@ public:
 	void DistinctItem();
 	void GiveItemToTruck();
 	int Random(int n);
-	pair<int, int> CreateRandomPosition();
 };

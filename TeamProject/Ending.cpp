@@ -1,9 +1,11 @@
 #include "Ending.h"
-#include "GameFunc.h"
 
 extern int metal_count;
 Ending::Ending()
 {
+	g_ending_mus = Mix_LoadMUS("../../Resources/ending.mp3"); // 배경음악 로드	
+	Mix_VolumeMusic(60);
+
 	// For Texture
 
 	SDL_Surface* temp_surface = IMG_Load("../../Resources/ending.png");
@@ -63,6 +65,16 @@ Ending::~Ending()
 
 void Ending::Update()
 {
+	if (isEndingPlay) return;
+
+	if (g_current_game_phase == PHASE_ENDING)
+	{
+		if (Mix_PlayingMusic())
+			Mix_HaltMusic();
+
+		Mix_PlayMusic(g_ending_mus, -1); // 배경음악 플레이
+		isEndingPlay = true;
+	}
 }
 
 
@@ -93,11 +105,12 @@ void Ending::HandleEvents()
 			g_flag_running = false;
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_SPACE) {
+			/*if (event.key.keysym.sym == SDLK_SPACE) {
 				g_current_game_phase = PHASE_INTRO;
-			}
-			if (event.key.keysym.sym == SDLK_0) {
+			}*/
+			if (event.key.keysym.sym == SDLK_SPACE) {
 				if (re == 0) {
+					isEndingPlay = false;
 					g_current_game_phase = PHASE_INTRO;
 				}
 				else if(re==1) {

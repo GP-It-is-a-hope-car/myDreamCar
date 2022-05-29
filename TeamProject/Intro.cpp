@@ -3,8 +3,10 @@
 
 Intro::Intro()
 {
-	// For Texture
+	g_intro_mus = Mix_LoadMUS("../../Resources/opening.mp3"); // 배경음악 로드	
+	Mix_VolumeMusic(40);
 
+	// For Texture
 	SDL_Surface* temp_surface = IMG_Load("../../Resources/intro_prototype.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
@@ -16,10 +18,21 @@ Intro::Intro()
 Intro::~Intro()
 {
 	SDL_DestroyTexture(texture_);
+	Mix_FreeMusic(g_intro_mus);
 }
 
 void Intro::Update()
 {
+	if (isOpeningPlay) return;
+
+	if (g_current_game_phase == PHASE_INTRO)
+	{
+		if(Mix_PlayingMusic())
+			Mix_HaltMusic();
+
+		Mix_PlayMusic(g_intro_mus, -1); // 배경음악 플레이
+		isOpeningPlay = true;
+	}
 }
 
 
@@ -46,15 +59,6 @@ void Intro::HandleEvents()
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				g_current_game_phase = PHASE_STORY;
 			}
-		case SDL_MOUSEBUTTONDOWN:
-
-			/*
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_STAGE1;
-			}
-			break;
-			*/
 		default:
 			break;
 		}

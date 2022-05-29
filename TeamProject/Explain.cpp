@@ -1,6 +1,7 @@
 #include "GameFunc.h"
 #include "Explain.h"
 
+bool g_stage_flag_running;
 Explain::Explain()
 {
 	// For Texture
@@ -22,15 +23,12 @@ void Explain::Update()
 {
 }
 
-
 void Explain::Render()
 {
 
 	SDL_RenderCopy(g_renderer, texture_, &source_rectangle_, &destination_rectangle_);
 	SDL_RenderPresent(g_renderer); // draw to the screen
 }
-
-
 
 void Explain::HandleEvents()
 {
@@ -44,17 +42,11 @@ void Explain::HandleEvents()
 			break;
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
+				Mix_HaltMusic();
+				game_phases[PHASE_INTRO]->isOpeningPlay = false;
+				g_stage_flag_running = true;
 				g_current_game_phase = PHASE_MAINSTAGE;
 			}
-		case SDL_MOUSEBUTTONDOWN:
-
-			/*
-			if (event.button.button == SDL_BUTTON_LEFT)
-			{
-				g_current_game_phase = PHASE_STAGE1;
-			}
-			break;
-			*/
 		default:
 			break;
 		}

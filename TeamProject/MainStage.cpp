@@ -3,7 +3,8 @@
 #include <windows.h>
 #include <string>
 #include <atlstr.h> // 한국어 쓰려면 필요함
-#include<vector>
+#include <vector>
+#include "GameFunc.h"
 
 using namespace std;
 int range;
@@ -14,7 +15,6 @@ Platform* ground;
 Platform* pf;
 ItemInterface* fuel;
 ItemInterface* iron;
-
 
 enum Key
 {
@@ -27,6 +27,7 @@ enum Key
 bool Left;
 bool Right;
 bool Jump;
+extern bool g_stage_flag_running;
 
 // 타일 구조체 선언
 typedef struct Tile {
@@ -42,6 +43,11 @@ vector<Tile> platform_tile;
 // Init() 대신 생성자를 사용함
 MainStage::MainStage()
 {
+	g_stage_flag_running = true;
+
+	g_main_mus = Mix_LoadMUS("../../Resources/stage.mp3"); // 배경음악 로드	
+	Mix_VolumeMusic(40);
+
 	MakeGameObjTextures();
 
 	InitTexts();
@@ -59,12 +65,7 @@ MainStage::MainStage()
 
 	g_truck_source_rect[0] = { 0,0,160,80 };
 	g_truck_source_rect[1] = { 160,0,320,80 };
-	/*
-	g_truck_source_rect.x = 0; // 트럭 가져오기
-	g_truck_source_rect.y = 0;
-	g_truck_source_rect.w = 160;
-	g_truck_source_rect.h = 80;
-	*/
+	
 	p = new Player;
 	ground = new Platform;
 	pf = new Platform(0, 0);
@@ -107,9 +108,15 @@ void MainStage::Update() {
 
 	// 트럭이 끝에 도달하면 해피엔딩
 	if (g_truck->getDstRect()->x > tile_destination[59][8].x ) {
-		g_stage_flag_running = false;
-		g_current_game_phase = PHASE_HAPPY_ENDING; 
+
+		isMainPlay = false;
 		InitGameObjectState();
+		g_stage_flag_running = false;
+
+		if (Mix_PlayingMusic())
+			Mix_HaltMusic();
+
+		g_current_game_phase = PHASE_HAPPY_ENDING;
 	}
 
 	g_truck->getDstRect()->x += 1;
@@ -209,6 +216,14 @@ void MainStage::Update() {
 		status_source_rect = { 16,540,180,160 };
 	}
 
+	if (!isMainPlay && g_current_game_phase == PHASE_MAINSTAGE)
+	{
+		if (Mix_PlayingMusic())
+			Mix_HaltMusic();
+
+		Mix_FadeInMusic(g_main_mus, -1, 2000); // 배경음악 플레이
+		isMainPlay = true;
+	}
 }
 
 /////////////////////////////////////////////////////////////
@@ -247,9 +262,6 @@ void MainStage::Render() {
 	//연료 게이지를 그림
 	SDL_RenderCopy(g_renderer, fuel_status, &status_source_rect, &status_destination_rect);
 
-	if (!g_stage_flag_running)
-		DrawGameOverText();
-
 		// 백에서 그린 그림을 한번에 가져옴
 	SDL_RenderPresent(g_renderer);
 }
@@ -278,6 +290,13 @@ void MainStage::HandleEvents()
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				p->jump();
 			}
+			if (event.key.keysym.sym == SDLK_q) {
+				fuel_amount = 0;
+			}
+			if (event.key.keysym.sym == SDLK_w) {
+				g_truck->getDstRect()->x = tile_destination[59][9].x;
+			}
+			
 			break;
 		case SDL_KEYUP:
 			if (event.key.keysym.sym == SDLK_LEFT)
@@ -312,9 +331,15 @@ void MainStage::HandleEvents()
 			fuel_amount = 4000;
 		}
 		else if (fuel_amount <= 0) {
-			g_stage_flag_running = false;
-			g_current_game_phase = PHASE_ENDING;
 			InitGameObjectState();
+
+			if (Mix_PlayingMusic())
+				Mix_HaltMusic();
+
+			isMainPlay = false;
+			g_stage_flag_running = false;
+
+			g_current_game_phase = PHASE_ENDING;		
 		}
 	}
 	
@@ -352,8 +377,6 @@ MainStage::~MainStage()
 
 void MainStage::InitGameObjectState() // 인트로에서 게임페이즈로 넘어올 때 초기화가 필요한 변수들의 초기화 
 {
-	g_stage_flag_running = true;
-
 	//타일 관련
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
@@ -559,17 +582,6 @@ void MainStage::GiveItemToTruck()
 void MainStage::DrawGameText()
 {
 
-}
-void MainStage::DrawGameOverText()
-{
-	SDL_Rect tmp_r; // 화면에 표시 될 위치
-
-	tmp_r.x = 265;
-	tmp_r.y = 325;
-	tmp_r.w = g_gameover_text_kr_rect.w;
-	tmp_r.h = g_gameover_text_kr_rect.h;
-
-	SDL_RenderCopy(g_renderer, g_gameover_text_kr, &g_gameover_text_kr_rect, &tmp_r); // 텍스트 표시
 }
 void MainStage::InitChunk()
 {

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GameFunc.h"
 
 class Fuel : public ItemInterface
@@ -22,7 +21,7 @@ public:
 
 		SDL_FreeSurface(fuel_sheet_surface);
 	};
-	virtual ~Fuel();
+	~Fuel();
 	virtual SDL_Texture* getTexture() {return fuel_sheet_texture_;}
 	virtual SDL_Rect* getSrcRect() { return &fuel_source_rect_; }
 };

@@ -50,8 +50,8 @@ Player::Player()
 	source_rect_iron_.x = source_rect_iron_.y = 0;
 	dest_rect_iron_.x = 0;
 	dest_rect_iron_.y = 0;
-	dest_rect_iron_.w = source_rect_iron_.w/4;
-	dest_rect_iron_.h = source_rect_iron_.h/4;
+	dest_rect_iron_.w = source_rect_iron_.w/2;
+	dest_rect_iron_.h = source_rect_iron_.h/2;
 	
 	//각종 변수들 초기화
 	//중력 가속도는 우리 게임에 맞게 적당히 수정해야함

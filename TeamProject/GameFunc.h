@@ -30,6 +30,7 @@ const int FUEL = 3;
 const int IRON = 4;
 
 const float ITEMTIME = 5.0f;
+extern bool g_stage_flag_running;
 extern int g_current_game_phase;
 extern bool g_flag_running;
 extern SDL_Window* g_window;
@@ -39,6 +40,10 @@ extern float g_timestep_s;
 class PhaseInterface
 {
 public:
+	bool isOpeningPlay = false;
+	bool isMainPlay = false;
+	bool isEndingPlay = false;
+
 	PhaseInterface() = default;
 	virtual ~PhaseInterface() = default;
 
