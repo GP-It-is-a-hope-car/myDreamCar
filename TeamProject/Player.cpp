@@ -287,7 +287,7 @@ void Player::reInit()
 	index =  0;
 	prev = -1;
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 200;
+	horizontalSpeed_ = 240;
 	mass_ = 2;
 	gravityAcc_ = 1960;
 	isHoldItem_ = false;
