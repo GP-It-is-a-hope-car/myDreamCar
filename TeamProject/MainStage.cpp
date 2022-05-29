@@ -536,10 +536,7 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	status_source_rect = { 29,30,180,160 };
 	advancement_source = { 85,305,640,65 };
 	// ½ÃÀÛ ½Ã ¾ÆÀÌÅÛ »ı¼º
-	for (int i = 0; i < 5; i++) // ¾ÆÀÌÅÛ 5°³¾¿ »ı¼º
-	{
-		CreateItem();
-	}
+	CreateItem();
 }
 void MainStage::MakeGameObjTextures()
 {
@@ -612,14 +609,6 @@ void MainStage::DistinctItem()
 				{
 					if (p->getItem(tile[i][j].state)) // ¸Ô´Âµ¥ ¼º°øÇß´Ù¸é
 					{
-						if (tile[i][j].state == FUEL)
-						{
-							cout << "GET FUEL!!\n";						
-						}
-						else
-						{
-							cout << "GET IRON!!\n";
-						}
 						tile[i][j].state = EMPTY;
 						tile[i][j].time = 0.0f;
 					}
@@ -647,14 +636,11 @@ void MainStage::GiveItemToTruck()
 		{
 			fuel_amount += 800;
 			Mix_PlayChannel(-1, give_fuel_sound, 0);
-			cout << "RETURN FUEL!!\n";
 		}
 		else
 		{
 			metal_count++;
 			Mix_PlayChannel(-1, give_iron_sound, 0);
-			cout << metal_count << "\n";
-			cout << "RETURN IRON!!\n";
 		}
 	}
 }
