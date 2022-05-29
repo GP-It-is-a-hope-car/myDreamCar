@@ -1,5 +1,9 @@
 #include "GameFunc.h"
 #include "Intro.h"
+#include "Intro2.h"
+#include "Intro3.h"
+#include "Intro4.h"
+#include "Intro5.h"
 #include "Explain.h"
 #include "MainStage.h"
 #include "Ending.h"
@@ -11,7 +15,7 @@ bool g_flag_running;
 Uint32 g_last_time_ms;
 int g_current_game_phase;
 
-PhaseInterface* game_phases[5];
+PhaseInterface* game_phases[9];
 float g_timestep_s = 1.0f / 60.0f;
 
 int main(int argc, char* argv[]) {
@@ -32,6 +36,10 @@ int main(int argc, char* argv[]) {
 	//g_current_game_phase = PHASE_MAINSTAGE;
 		
 	game_phases[PHASE_INTRO] = new Intro;
+	game_phases[PHASE_INTRO2] = new Intro2;
+	game_phases[PHASE_INTRO3] = new Intro3;
+	game_phases[PHASE_INTRO4] = new Intro4;
+	game_phases[PHASE_INTRO5] = new Intro5;
 	game_phases[PHASE_EXPLAIN] = new Explain;
 	game_phases[PHASE_MAINSTAGE] = new MainStage;
 	game_phases[PHASE_ENDING] = new Ending;
@@ -59,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 	ClearGame();
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		delete game_phases[i];
 	}

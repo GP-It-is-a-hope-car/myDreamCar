@@ -6,3 +6,4 @@ Fuel::~Fuel()
 	SDL_DestroyTexture(fuel_sheet_texture_);
 }
 
+

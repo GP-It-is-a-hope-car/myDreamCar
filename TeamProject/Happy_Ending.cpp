@@ -6,12 +6,11 @@ Happy_ending::Happy_ending()
 {
 	// For Texture
 
-	SDL_Surface* temp_surface = IMG_Load("../../Resources/Happy_Ending.png");
+	SDL_Surface* temp_surface = IMG_Load("../../Resources/ending_happy.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
 	source_rectangle_ = { 0,0,640,640 };
 	destination_rectangle_ = { 0,0,640,640 };
-	char s1 = '00';
 }
 
 Happy_ending::~Happy_ending()
@@ -22,7 +21,7 @@ Happy_ending::~Happy_ending()
 }
 
 void Happy_ending::Score_metal(int metal_count) {
-	TTF_Font* font1 = TTF_OpenFont("../../Resources/bmjua.ttf", 50);
+	TTF_Font* font1 = TTF_OpenFont("../../Resources/DungGeunMo.ttf", 50);
 	SDL_Color black = { 0, 0, 0, 0 };
 	SDL_Surface* tmp_surface = TTF_RenderText_Blended(font1, std::to_string((long long)metal_count).c_str(), black);
 	metal_texture_rect = {0,0,150,100 };
@@ -33,10 +32,7 @@ void Happy_ending::Score_metal(int metal_count) {
 
 void Happy_ending::Update()
 {
-	if (metal_count >= 10) {
-		s1 = '0';
-	}
-	else { s1 = '00'; }
+	
 	Score_metal(metal_count);
 }
 

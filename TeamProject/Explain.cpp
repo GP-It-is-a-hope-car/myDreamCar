@@ -6,7 +6,7 @@ Explain::Explain()
 {
 	// For Texture
 
-	SDL_Surface* temp_surface = IMG_Load("../../Resources/dummy_introduce.png");
+	SDL_Surface* temp_surface = IMG_Load("../../Resources/intro_5.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
 	source_rectangle_ = { 0,0,640,640 };

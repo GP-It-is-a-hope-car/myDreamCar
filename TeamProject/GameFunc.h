@@ -17,10 +17,14 @@ void ClearGame();
 
 // Game Phases
 const int PHASE_INTRO = 0;
-const int PHASE_EXPLAIN = 1;
-const int PHASE_MAINSTAGE = 2;
-const int PHASE_ENDING = 3;
-const int PHASE_HAPPY_ENDING = 4;
+const int PHASE_INTRO2 = 1;
+const int PHASE_INTRO3 = 2;
+const int PHASE_INTRO4 = 3;
+const int PHASE_INTRO5 = 4;
+const int PHASE_EXPLAIN = 5;
+const int PHASE_MAINSTAGE = 6;
+const int PHASE_ENDING = 7;
+const int PHASE_HAPPY_ENDING = 8;
 
 const int EMPTY = 0;
 const int GROUND = 1;
@@ -76,4 +80,4 @@ public:
 	virtual void addTime(float time) { creatTime += time; }
 };
 
-extern PhaseInterface* game_phases[5];
+extern PhaseInterface* game_phases[9];

@@ -147,6 +147,10 @@
     <ClInclude Include="GameFunc.h" />
     <ClInclude Include="Happy_Ending.h" />
     <ClInclude Include="Intro.h" />
+    <ClInclude Include="intro2.h" />
+    <ClInclude Include="intro3.h" />
+    <ClInclude Include="intro4.h" />
+    <ClInclude Include="intro5.h" />
     <ClInclude Include="Iron.h" />
     <ClInclude Include="MainStage.h" />
     <ClInclude Include="Platform.h" />
@@ -161,6 +165,10 @@
     <ClCompile Include="GameFunc.cpp" />
     <ClCompile Include="Happy_Ending.cpp" />
     <ClCompile Include="Intro.cpp" />
+    <ClCompile Include="intro2.cpp" />
+    <ClCompile Include="intro3.cpp" />
+    <ClCompile Include="intro4.cpp" />
+    <ClCompile Include="intro5.cpp" />
     <ClCompile Include="Iron.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MainStage.cpp" />

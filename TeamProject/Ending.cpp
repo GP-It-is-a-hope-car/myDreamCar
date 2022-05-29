@@ -8,7 +8,7 @@ Ending::Ending()
 
 	// For Texture
 
-	SDL_Surface* temp_surface = IMG_Load("../../Resources/Bad_Ending.png");
+	SDL_Surface* temp_surface = IMG_Load("../../Resources/ending_bad.png");
 	texture_ = SDL_CreateTextureFromSurface(g_renderer, temp_surface);
 	SDL_FreeSurface(temp_surface);
 	source_rectangle_ = { 0,0,640,640 };

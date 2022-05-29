@@ -678,7 +678,7 @@ void MainStage::InitChunk()
 
 void MainStage::InitTexts()
 {
-	g_font_gameover = TTF_OpenFont("../../Resources/MaruBuri-SemiBold.ttf", 32);
+	g_font_gameover = TTF_OpenFont("../../Resources/DungGeunMo.ttf", 32);
 	SDL_Surface* tmp_surface_1 = TTF_RenderUTF8_Blended(g_font_gameover, CW2A(L"Game Over!", CP_UTF8), black);
 	//텍스트 가져오기
 	g_gameover_text_kr_rect.x = 0;
