@@ -4,6 +4,9 @@
 extern int metal_count;
 Happy_ending::Happy_ending()
 {
+	g_ending_happy_mus = Mix_LoadMUS("../../Resources/ending_happy.mp3"); // 배경음악 로드	
+	Mix_VolumeMusic(60);
+
 	// For Texture
 
 	SDL_Surface* temp_surface = IMG_Load("../../Resources/ending_happy.png");
@@ -32,7 +35,16 @@ void Happy_ending::Score_metal(int metal_count) {
 
 void Happy_ending::Update()
 {
-	
+	if (isEndingPlay) return;
+
+	if (g_current_game_phase == PHASE_HAPPY_ENDING)
+	{
+		if (Mix_PlayingMusic())
+			Mix_HaltMusic();
+
+		Mix_PlayMusic(g_ending_happy_mus, -1); // 배경음악 플레이
+		isEndingPlay = true;
+	}
 	Score_metal(metal_count);
 }
 
@@ -62,7 +74,7 @@ void Happy_ending::HandleEvents()
 		case SDL_KEYDOWN:
 			
 			if (event.key.keysym.sym == SDLK_RETURN) {
-				
+				isEndingPlay = false;
 				g_current_game_phase = PHASE_INTRO;
 				metal_count = 0;
 			}

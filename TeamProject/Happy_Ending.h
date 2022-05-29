@@ -13,6 +13,8 @@ public:
 	virtual void Score_metal(int metal_count);
 
 private:
+	Mix_Music* g_ending_happy_mus; // 인트로 배경음악 변수 선언
+
 	//배경
 	SDL_Texture* texture_;
 	SDL_Rect source_rectangle_;

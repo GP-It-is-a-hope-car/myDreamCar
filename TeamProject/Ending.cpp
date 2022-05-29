@@ -61,6 +61,7 @@ void Ending::HandleEvents()
 		case SDL_KEYDOWN:
 			
 			if (event.key.keysym.sym == SDLK_RETURN) {
+				isEndingPlay = false;
 				g_current_game_phase = PHASE_INTRO;
 			}
 			
