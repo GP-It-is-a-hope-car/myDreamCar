@@ -57,7 +57,7 @@ Player::Player()
 	index = 0;
 	prev = -1;
 	verticalSpeed_ = 0;
-	horizontalSpeed_ = 200;
+	horizontalSpeed_ = 240;
 	mass_ = 2;
 	gravityAcc_ = 1960;
 	isHoldItem_ = false;
@@ -168,7 +168,7 @@ void Player::move_left(double timestep_s)
 	}
 
 	double dt = timestep_s;
-	horizontalSpeed_ = 200;
+	horizontalSpeed_ = 240;
 	dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
 	if (dest_rect_player_.x<256&&range==2) {
 		dest_rect_player_.x = dest_rect_player_.x - dt * horizontalSpeed_;
@@ -209,7 +209,7 @@ void Player::move_right(double timestep_s)
 	}
 	double dt = timestep_s;
 
-	horizontalSpeed_ = 200;
+	horizontalSpeed_ = 240;
 	dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
 	if (range==1&&dest_rect_player_.x >288) {
 		dest_rect_player_.x = dest_rect_player_.x + dt * horizontalSpeed_;
