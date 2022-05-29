@@ -442,43 +442,38 @@ void MainStage::InitGameObjectState() // ÀÎÆ®·Î¿¡¼­ °ÔÀÓÆäÀÌÁî·Î ³Ñ¾î¿Ã ¶§ ÃÊ±âÈ
 	}
 	// ¹ßÆÇ ±×¸²
 	for (int i = 0; i < 1; i++) { //1Ä­
-		tile[i][7].state = PLATFORM;
-		tile[i + 2][5].state = PLATFORM;
-		tile[i + 11][7].state = PLATFORM;
-		tile[i + 37][7].state = PLATFORM;
-		tile[i + 33][3].state = PLATFORM;
-		tile[i + 53][4].state = PLATFORM;
+		tile[i][3].state = PLATFORM;
+		tile[i][5].state = PLATFORM;		
 	}
 	for (int i = 0; i < 2; i++) { //2Ä­
-		tile[i][2].state = PLATFORM;
-		tile[i+8][5].state = PLATFORM;
-		tile[i+11][3].state = PLATFORM;
-		tile[i + 14][4].state = PLATFORM;
-		tile[i + 17][3].state = PLATFORM;
-		tile[i + 21][2].state = PLATFORM;
-		tile[i + 14][6].state = PLATFORM;
-		tile[i + 35][2].state = PLATFORM;
-		tile[i + 55][5].state = PLATFORM;
+		tile[i][7].state = PLATFORM;
+		tile[i+5][2].state = PLATFORM;
+		tile[i + 9][3].state = PLATFORM;
+		tile[i + 9][7].state = PLATFORM;
+		tile[i + 12][4].state = PLATFORM;
+		tile[i + 17][4].state = PLATFORM;
+		tile[i + 21][4].state = PLATFORM;
+		tile[i + 25][4].state = PLATFORM;
+		tile[i + 39][3].state = PLATFORM;
+		tile[i + 39][6].state = PLATFORM;
+		tile[i + 48][3].state = PLATFORM;
+		tile[i + 48][6].state = PLATFORM;
+		tile[i + 53][5].state = PLATFORM;
+
 	}
 	for (int i = 0; i < 3; i++) { //3Ä­
-		tile[i+4][7].state = PLATFORM;
-		tile[i +4][3].state = PLATFORM;
-		tile[i + 19][5].state = PLATFORM;
-		tile[i + 29][5].state = PLATFORM;
-		tile[i + 37][5].state = PLATFORM;
-		tile[i + 45][5].state = PLATFORM;
-		tile[i + 17][7].state = PLATFORM;
-		tile[i + 25][7].state = PLATFORM;
-		tile[i + 33][7].state = PLATFORM;
-		tile[i + 41][7].state = PLATFORM;
-		tile[i + 49][7].state = PLATFORM;
-		tile[i + 25][3].state = PLATFORM;
-		tile[i + 41][3].state = PLATFORM;
-		tile[i + 49][3].state = PLATFORM;
+		tile[i + 13][6].state = PLATFORM;
+		tile[i + 30][3].state = PLATFORM;
+		tile[i + 30][5].state = PLATFORM;
+		tile[i + 34][2].state = PLATFORM;
+		tile[i + 34][4].state = PLATFORM;
+		tile[i + 34][7].state = PLATFORM;
+		tile[i + 52][7].state = PLATFORM;
 		tile[i + 57][3].state = PLATFORM;
+
 	}
 	for (int i = 0; i < 4; i++) { //4Ä­
-		tile[i + 54][7].state = PLATFORM;
+		tile[i + 43][4].state = PLATFORM;
 	}
 	for (int i = 0; i < map_w; i++) {
 		for (int j = 0; j < map_h; j++) {
