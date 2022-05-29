@@ -179,6 +179,11 @@ void Player::move_left(double timestep_s)
 	else if (dest_rect_player_.x <= 256 && range != 2) {
 		dest_rect_player_.x = 256;
 	}
+
+	if (dest_rect_player_.x < 0)
+	{
+		dest_rect_player_.x = 0;
+	}
 	
 	prev = index;
 
@@ -214,6 +219,11 @@ void Player::move_right(double timestep_s)
 	}
 	else if (range != 1 && dest_rect_player_.x >=288) {
 		dest_rect_player_.x = 288;
+	}
+
+	if (dest_rect_player_.x > 589)
+	{
+		dest_rect_player_.x = 589;
 	}
 
 	prev = index;
