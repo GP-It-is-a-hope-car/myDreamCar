@@ -93,10 +93,10 @@ void Happy_ending::HandleEvents()
 			g_flag_running = false;
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_SPACE) {
+			/*if (event.key.keysym.sym == SDLK_SPACE) {
 				g_current_game_phase = PHASE_INTRO;
-			}
-			if (event.key.keysym.sym == SDLK_0) {
+			}*/
+			if (event.key.keysym.sym == SDLK_SPACE) {
 				if (re == 0) {
 					g_current_game_phase = PHASE_INTRO;
 				}
